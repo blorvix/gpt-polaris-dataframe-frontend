@@ -32,7 +32,7 @@ function Message(props: {
           </div>
         )}
 
-        {(props.type == "message" || props.type == "message_raw") &&
+        {(props.type == "text" || props.type == "message_raw") &&
           (props.showLoader ? (
             <div>
               {text} {props.showLoader ? <div className="loader"></div> : null}
@@ -53,9 +53,10 @@ function Message(props: {
 }
 
 export enum WaitingStates {
+  GeneratingResponse = "Generating response",
   GeneratingCode = "Generating code",
   RunningCode = "Running code",
-  UploadingFile = "Uploading file",
+  UploadingFiles = "Uploading file(s)",
   Idle = "Idle",
 }
 
@@ -68,6 +69,7 @@ export default function Chat(props: {
     <>
       <div className="chat-messages" ref={props.chatScrollRef}>
         {props.messages.map((message, index) => {
+          console.log(message)
           return (
             <Message
               key={index}
@@ -81,7 +83,7 @@ export default function Chat(props: {
           <Message
             text={props.waitingForSystem}
             role="system"
-            type="message"
+            type="text"
             showLoader={true}
           />
         ) : null}

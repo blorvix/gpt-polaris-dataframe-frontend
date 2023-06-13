@@ -6,7 +6,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import Config from "../config";
 import "./Input.css";
 
-export default function Input(props: { onSendMessage: any, onStartUpload: any, onCompletedUpload: any }) {
+export default function Input(props: { onSendMessage: any, onUploadFile: any, onStartUpload: any, onCompleteUpload: any }) {
 
   let fileInputRef = useRef<HTMLInputElement>(null);
   let [inputIsFocused, setInputIsFocused] = useState<boolean>(false);
@@ -27,30 +27,11 @@ export default function Input(props: { onSendMessage: any, onStartUpload: any, o
 
   const handleFileChange = async (e: any) => {
     if (e.target.files.length > 0) {
-      const file = e.target.files[0];
-
-      // Create a new FormData instance
-      const formData = new FormData();
-
-      // Append the file to the form data
-      formData.append("file", file);
-
-      props.onStartUpload(file.name);
-
-      try {
-        const response = await fetch(Config.WEB_ADDRESS + "/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        props.onCompletedUpload(file.name);
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      props.onStartUpload();
+      for (const file of e.target.files) {
+        await props.onUploadFile(file);
       }
+      props.onCompleteUpload()
     }
   };
   
@@ -76,10 +57,12 @@ export default function Input(props: { onSendMessage: any, onStartUpload: any, o
       <div className={"input-holder " + (inputIsFocused ? "focused" : "")}>
         <form className="file-upload">
           <input
+            accept=".csv"
             onChange={handleFileChange}
             ref={fileInputRef}
             style={{ display: "none" }}
             type="file"
+            multiple
           />
           <button type="button" onClick={handleUpload}>
             <FileUploadIcon />
