@@ -16,10 +16,10 @@ function App() {
   const COMMANDS = ["reset"];
   const MODELS = [{
       displayName: "GPT-3.5",
-      name: "gpt-3.5-turbo",
+      name: "3.5",
     },{
       displayName: "GPT-4",
-      name: "gpt-4",
+      name: "4",
     }];
 
   let [selectedModel, setSelectedModel] = useLocalStorage<string>("model", MODELS[0].name);
