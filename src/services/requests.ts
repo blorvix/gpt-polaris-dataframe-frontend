@@ -28,7 +28,11 @@ export const post = (url: string, data: any, options: any = {}) =>
   }).then(handleResponse)
 
 export const loadUserInfoApi = () => {
-  return get('/user/info')
+  return get('/user/')
+}
+
+export const saveUserInfoApi = (data: any) => {
+  return post('/user/', data)
 }
 
 export const loadConversationsApi = () => {

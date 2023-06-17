@@ -9,7 +9,7 @@ import { GoogleLogin } from '@react-oauth/google';
 
 // const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL } = process.env;
 
-const LoginButton = () => {
+const LoginButton = (props: {afterLogin: any}) => {
     const {setToken, setUser} = useContext(UserContext)
     // const openGoogleLoginPage = useCallback(() => {
     //     const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
@@ -56,6 +56,7 @@ const LoginButton = () => {
             .then((data) => {
                 setToken(data.token)
                 setUser(data.user)
+                props.afterLogin()
             })
             .catch(notifyError);
     };

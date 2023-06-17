@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useContext } from "react";
+import { useEffect, useRef, useState, useContext, useCallback } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import "./Dashboard.css";
 import Chat from "./components/Chat";
@@ -41,6 +41,14 @@ function Dashboard() {
   const uploadFile = (file: any) => {
     uploadFileApi(currentConvId, file).then(message => addMessage(message))
   }
+
+  const loadConversations = useCallback(() => {
+    if (!token) return
+    loadConversationsApi().then(conversations => {
+      setConversations(conversations)
+      setCurrentConvId(conversations[0].id)
+    })
+  }, [setConversations, setCurrentConvId])
   
   const onLoad = useEffect(() => {
     // load conversations
@@ -52,15 +60,8 @@ function Dashboard() {
       console.log("error")
       setToken("")
     })
+    loadConversations()
   }, [])
-
-  const loadConversations = useEffect(() => {
-    if (!token) return
-    loadConversationsApi().then(conversations => {
-      setConversations(conversations)
-      setConversations(conversations[0].id)
-    })
-  }, [user])
 
   return (
     <>
@@ -81,7 +82,7 @@ function Dashboard() {
           </div>
         </> : <>
           <div className="flex-center">
-            <LoginButton />
+            <LoginButton afterLogin={loadConversations} />
           </div>
         </>}
       </div>

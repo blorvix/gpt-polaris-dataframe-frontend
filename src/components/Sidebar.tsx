@@ -4,6 +4,7 @@ import "./Sidebar.css";
 import Config from '../config';
 import { UserContext } from '../services/context';
 import { useContext } from 'react';
+import { saveUserInfoApi } from '../services/requests';
 
 export default function Sidebar() {
   const { token, user, setUser } = useContext(UserContext);
@@ -15,8 +16,15 @@ export default function Sidebar() {
         ...user,
         openai_key: key
       });
+      saveUserInfoApi({openai_key: key})
     }
   };
+
+  const saveModel = (e: any) => {
+    const model = e.target.value
+    setUser({ ...user, openai_model: model })
+    saveUserInfoApi({openai_model: model})
+  }
 
   return (
     <>
@@ -34,7 +42,7 @@ export default function Sidebar() {
           <label>Model</label>
           <select
             value={user.openai_model}
-            onChange={(event) => setUser({ ...user, openai_model: event.target.value })}
+            onChange={saveModel}
           >
             {Config.MODELS.map((model, index) => {
               return (
