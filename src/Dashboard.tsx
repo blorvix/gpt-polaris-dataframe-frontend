@@ -54,7 +54,6 @@ function Dashboard() {
     // load conversations
     if (!token) return;
     loadUserInfoApi().then((data) => {
-      console.log("success", data)
       setUser(data)
     }).catch(() => {
       console.log("error")
@@ -66,7 +65,7 @@ function Dashboard() {
   return (
     <>
       <div className="app">
-        <Sidebar />
+        <Sidebar converstations={conversations} />
         {!!token ? <>
           <div className="main">
             <Chat

@@ -1,12 +1,15 @@
 import AssistantIcon from '@mui/icons-material/Assistant';
+import Divider from '@mui/material/Divider';
 
 import "./Sidebar.css";
 import Config from '../config';
 import { UserContext } from '../services/context';
 import { useContext } from 'react';
 import { saveUserInfoApi } from '../services/requests';
+import Conversation from './Conversation';
+import NewConvButton from './NewConvButton';
 
-export default function Sidebar() {
+export default function Sidebar(props: {converstations: any}) {
   const { token, user, setUser } = useContext(UserContext);
 
   const handleOpenAIButtonClick = () => {
@@ -30,11 +33,14 @@ export default function Sidebar() {
     <>
       <div className="sidebar">
         <div className="logo">
-          <AssistantIcon /> GPT-Code UI
-
-          <div className='github'>
-            <a href='https://github.com/ricklamers/gpt-code-ui'>Open Source - v{import.meta.env.VITE_APP_VERSION}</a>
-          </div>
+          <AssistantIcon /> Data - GPT
+        </div>
+        <div className='conversations'>
+          <NewConvButton />
+          <Divider light={true} />
+          {props.converstations.map((conv: any) => (
+            <Conversation key={conv.id} conv={conv} />
+          ))}
         </div>
         {!!token && (
         <div className="settings">
