@@ -8,7 +8,7 @@ import Sidebar from "./components/Sidebar";
 import Config from "./config";
 import { Conversation, Message, User, WaitingStates } from "./types";
 import { UserContext } from "./services/context";
-import { sendMessageApi, uploadFileApi, loadConversationsApi } from "./services/requests";
+import { sendMessageApi, uploadFileApi, loadConversationsApi, loadUserInfoApi } from "./services/requests";
 
 
 function Dashboard() {
@@ -16,7 +16,7 @@ function Dashboard() {
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [conversations, setConversations] = useState<Array<Conversation>>([]);
   const [currentConvId, setCurrentConvId] = useState<number>(0);
-  const {user, setUser} = useContext(UserContext);
+  const {token, setToken, user, setUser} = useContext(UserContext);
 
   const startUpload = () => setWaitingForSystem(WaitingStates.UploadingFiles);
   const completeUpload = () => setWaitingForSystem(WaitingStates.Idle);
@@ -44,17 +44,29 @@ function Dashboard() {
   
   const onLoad = useEffect(() => {
     // load conversations
+    if (!token) return;
+    loadUserInfoApi().then((data) => {
+      console.log("success", data)
+      setUser(data)
+    }).catch(() => {
+      console.log("error")
+      setToken("")
+    })
+  }, [])
+
+  const loadConversations = useEffect(() => {
+    if (!token) return
     loadConversationsApi().then(conversations => {
       setConversations(conversations)
       setConversations(conversations[0].id)
     })
-  }, [])
+  }, [user])
 
   return (
     <>
       <div className="app">
         <Sidebar />
-        {user.logined ? <>
+        {!!token ? <>
           <div className="main">
             <Chat
               waitingForSystem={waitingForSystem}

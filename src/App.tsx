@@ -8,6 +8,8 @@ import { UserContext } from "./services/context";
 import { useLocalStorage } from "usehooks-ts";
 import { User } from './types';
 import Config from "./config";
+import {useState} from 'react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const router = createBrowserRouter([
   {
@@ -17,11 +19,14 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  const [user, setUser] = useLocalStorage<User>("user", {logined: false, openai_key: "", openai_model: Config.MODELS[0].name});
+  const [token, setToken] = useLocalStorage<string>("token", "");
+  const [user, setUser] = useState<User>({openai_key: "", openai_model: Config.MODELS[0].name});
   
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <RouterProvider router={router} />
+    <UserContext.Provider value={{ token, setToken, user, setUser }}>
+      <GoogleOAuthProvider clientId={Config.GOOGLE_CLIENT_ID}>
+        <RouterProvider router={router} />
+      </GoogleOAuthProvider>
     </UserContext.Provider>
   )
 }

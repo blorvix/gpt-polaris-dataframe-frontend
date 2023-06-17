@@ -1,5 +1,4 @@
 export type User = {
-    logined: boolean;
     openai_key: string;
     openai_model: string;
 };
