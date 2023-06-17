@@ -3,10 +3,9 @@ import { useEffect, useRef } from "react";
 
 import VoiceChatIcon from "@mui/icons-material/VoiceChat";
 import PersonIcon from "@mui/icons-material/Person";
-import { MessageDict } from "../App";
 
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { WaitingStates } from "../types";
+import { WaitingStates, Message } from "../types";
 
 function Message(props: {
   text: string;
@@ -57,7 +56,7 @@ function Message(props: {
 
 export default function Chat(props: {
   waitingForSystem: WaitingStates;
-  messages: Array<MessageDict>;
+  messages: Array<Message>;
 }) {
   const chatScrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

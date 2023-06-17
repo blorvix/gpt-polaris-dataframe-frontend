@@ -1,18 +1,20 @@
 import AssistantIcon from '@mui/icons-material/Assistant';
 
 import "./Sidebar.css";
+import Config from '../config';
+import { UserContext } from '../services/context';
+import {useContext} from 'react';
 
-export default function Sidebar(props: {
-  models: Array<{ name: string; displayName: string }>;
-  selectedModel: string;
-  onSelectModel: any;
-  setOpenAIKey: any;
-  openAIKey: string;
-}) {
+export default function Sidebar() {
+  const {user, setUser} = useContext(UserContext);
+  
   const handleOpenAIButtonClick = () => {
-    const key = prompt("Please enter your OpenAI key", props.openAIKey);
+    const key = prompt("Please enter your OpenAI key", user.openai_key);
     if (key != null) {
-      props.setOpenAIKey(key);
+      setUser({
+        ...user,
+        openai_key: key
+      });
     }
   };
   return (
@@ -29,10 +31,10 @@ export default function Sidebar(props: {
             <label className="header">Settings</label>
             <label>Model</label>
             <select
-            value={props.selectedModel}
-            onChange={(event) => props.onSelectModel(event.target.value)}
+            value={user.openai_model}
+            onChange={(event) => setUser({ ...user, openai_model: event.target.value })}
             >
-            {props.models.map((model, index) => {
+            {Config.MODELS.map((model, index) => {
                 return (
                 <option key={index} value={model.name}>
                     {model.displayName}
@@ -43,7 +45,4 @@ export default function Sidebar(props: {
             <label>Credentials</label>
             <button onClick={handleOpenAIButtonClick}>Set OpenAI key</button>
         </div>
-      </div>
-    </>
-  );
-}
+  

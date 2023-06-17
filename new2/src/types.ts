@@ -1,6 +1,7 @@
 export type User = {
-    openai_key: string;
     logined: boolean;
+    openai_key: string;
+    openai_model: string;
 };
 
 export enum WaitingStates {
@@ -18,5 +19,6 @@ export type Message = {
 };
 
 export type Conversation = {
-
+    id: number;
+    name: string;
 }
