@@ -8,7 +8,7 @@ import Sidebar from "./components/Sidebar";
 import Config from "./config";
 import { Conversation, Message, User, WaitingStates } from "./types";
 import { UserContext } from "./services/context";
-import { sendMessageApi, uploadFileApi, loadConversationsApi, loadUserInfoApi } from "./services/requests";
+import { sendMessageApi, uploadFileApi, loadConversationsApi, loadUserInfoApi, loadMessagesApi } from "./services/requests";
 
 
 function Dashboard() {
@@ -49,6 +49,11 @@ function Dashboard() {
       setCurrentConvId(conversations[0].id)
     })
   }, [setConversations, setCurrentConvId])
+
+  const loadMessages = useEffect(() => {
+    if (!currentConvId) return;
+    loadMessagesApi(currentConvId).then(messages => setMessages(messages))
+  }, [currentConvId])
   
   const onLoad = useEffect(() => {
     // load conversations
@@ -66,20 +71,26 @@ function Dashboard() {
     <>
       <div className="app">
         <Sidebar converstations={conversations} />
-        {!!token ? <>
-          <div className="main">
-            <Chat
-              waitingForSystem={waitingForSystem}
-              messages={messages}
-            />
-            <Input
-              onSendMessage={sendMessage}
-              onUploadFile={uploadFile}
-              onStartUpload={startUpload}
-              onCompleteUpload={completeUpload}
-            />
-          </div>
-        </> : <>
+        {!!token ? (
+          user.openai_key ? (
+            <div className="main">
+              <Chat
+                waitingForSystem={waitingForSystem}
+                messages={messages}
+              />
+              <Input
+                onSendMessage={sendMessage}
+                onUploadFile={uploadFile}
+                onStartUpload={startUpload}
+                onCompleteUpload={completeUpload}
+              />
+            </div>
+          ) : (
+            <div className="flex-center">
+              You need to set openai key to continue.
+            </div>
+          )
+        ) : <>
           <div className="flex-center">
             <LoginButton afterLogin={loadConversations} />
           </div>

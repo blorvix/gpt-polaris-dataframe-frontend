@@ -68,7 +68,6 @@ export default function Chat(props: {
     <>
       <div className="chat-messages" ref={chatScrollRef}>
         {props.messages.map((message, index) => {
-          console.log(message)
           return (
             <Message
               key={index}
