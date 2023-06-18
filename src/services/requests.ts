@@ -4,7 +4,7 @@ import { removeSlash } from "./utils";
 const getBaseConfig = (method: any) => ({
   method,
   headers: {
-    // 'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
     'Authorization': `Token ` + localStorage.getItem("token")?.replaceAll('"', '')
   },
 });
@@ -48,7 +48,7 @@ export const uploadFileApi = (conv_id: number, file: any) => {
   const formData = new FormData();
   formData.append("file", file);
 
-  return post(`/conversations/${conv_id}/upload`, formData);
+  return post(`/conversations/${conv_id}/upload`, formData, {'Content-Type': 'multipart/form-data'});
 }
 
 export const sendMessageApi = (conv_id: number, message: string) => {

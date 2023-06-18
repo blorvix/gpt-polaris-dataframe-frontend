@@ -2,11 +2,11 @@ import AssistantIcon from '@mui/icons-material/Assistant';
 import Divider from '@mui/material/Divider';
 
 import "./Sidebar.css";
-import Config from '../config';
-import { UserContext } from '../services/context';
+import Config from '../../config';
+import { UserContext } from '../../services/context';
 import { useContext } from 'react';
-import { saveUserInfoApi } from '../services/requests';
-import Conversation from './Conversation';
+import { saveUserInfoApi } from '../../services/requests';
+import ConversationItem from './ConversationItem';
 import NewConvButton from './NewConvButton';
 
 export default function Sidebar(props: {converstations: any}) {
@@ -39,7 +39,7 @@ export default function Sidebar(props: {converstations: any}) {
           <NewConvButton />
           <Divider light={true} />
           {props.converstations.map((conv: any) => (
-            <Conversation key={conv.id} conv={conv} />
+            <ConversationItem key={conv.id} conv={conv} />
           ))}
         </div>
         {!!token && (

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, useContext, useCallback } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import "./Dashboard.css";
-import Chat from "./components/Chat";
-import Input from "./components/Input";
+import MessageBoard from "./components/board/MessageBoard";
+import Input from "./components/board/Input";
 import LoginButton from "./components/LoginButton";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/sidebar/Sidebar";
 import Config from "./config";
 import { Conversation, Message, User, WaitingStates } from "./types";
 import { UserContext } from "./services/context";
@@ -17,9 +17,18 @@ function Dashboard() {
   const [conversations, setConversations] = useState<Array<Conversation>>([]);
   const [currentConvId, setCurrentConvId] = useState<number>(0);
   const {token, setToken, user, setUser} = useContext(UserContext);
+  const [askQuestion, setAskQuestion] = useState<boolean>(false);
 
   const startUpload = () => setWaitingForSystem(WaitingStates.UploadingFiles);
-  const completeUpload = () => setWaitingForSystem(WaitingStates.Idle);
+  const completeUpload = (file_count: number) => {
+    setWaitingForSystem(WaitingStates.Idle);
+    
+    addMessage({
+      role: "user",
+      type: "text",
+      text: "Will you like to get some insights into the dataset?"
+    })
+  }
 
   const addMessage = (message: Message) => {
     setMessages([
@@ -38,8 +47,11 @@ function Dashboard() {
     sendMessageApi(currentConvId, message).then(message => addMessage(message))
   }
 
-  const uploadFile = (file: any) => {
-    uploadFileApi(currentConvId, file).then(message => addMessage(message))
+  const uploadFiles = (files: any) => {
+    startUpload()
+    for (const file of files)
+      uploadFileApi(currentConvId, file).then(message => addMessage(message))
+    completeUpload(files.length)
   }
 
   const loadConversations = useCallback(() => {
@@ -74,15 +86,13 @@ function Dashboard() {
         {!!token ? (
           user.openai_key ? (
             <div className="main">
-              <Chat
+              <MessageBoard
                 waitingForSystem={waitingForSystem}
                 messages={messages}
               />
               <Input
                 onSendMessage={sendMessage}
-                onUploadFile={uploadFile}
-                onStartUpload={startUpload}
-                onCompleteUpload={completeUpload}
+                onUploadFiles={uploadFiles}
               />
             </div>
           ) : (

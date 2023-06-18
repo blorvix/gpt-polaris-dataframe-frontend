@@ -3,10 +3,9 @@ import { useRef, useState } from "react";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import SendIcon from "@mui/icons-material/Send";
 import TextareaAutosize from "react-textarea-autosize";
-import Config from "../config";
 import "./Input.css";
 
-export default function Input(props: { onSendMessage: any, onUploadFile: any, onStartUpload: any, onCompleteUpload: any }) {
+export default function Input(props: { onSendMessage: any, onUploadFiles: any }) {
 
   let fileInputRef = useRef<HTMLInputElement>(null);
   let [inputIsFocused, setInputIsFocused] = useState<boolean>(false);
@@ -27,11 +26,7 @@ export default function Input(props: { onSendMessage: any, onUploadFile: any, on
 
   const handleFileChange = async (e: any) => {
     if (e.target.files.length > 0) {
-      props.onStartUpload();
-      for (const file of e.target.files) {
-        await props.onUploadFile(file);
-      }
-      props.onCompleteUpload()
+      props.onUploadFiles(e.target.files);
     }
   };
   

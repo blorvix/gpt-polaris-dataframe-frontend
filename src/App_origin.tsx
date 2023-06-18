@@ -1,7 +1,7 @@
 import "./App.css";
 import Input from "./components/Input";
 import Sidebar from "./components/Sidebar";
-import Chat, { WaitingStates } from "./components/Chat";
+import MessageBoard, { WaitingStates } from "./components/MessageBoard";
 import { useState, useEffect, useRef } from "react";
 import Config from "./config";
 import { useLocalStorage } from "usehooks-ts";
@@ -181,7 +181,7 @@ function App() {
           }}
         />
         <div className="main">
-          <Chat
+          <MessageBoard
             chatScrollRef={chatScrollRef}
             waitingForSystem={waitingForSystem}
             messages={messages}

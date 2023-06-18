@@ -1,11 +1,11 @@
-import "./Chat.css";
+import "./MessageBoard.css";
 import { useEffect, useRef } from "react";
 
 import VoiceChatIcon from "@mui/icons-material/VoiceChat";
 import PersonIcon from "@mui/icons-material/Person";
 
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { WaitingStates, Message } from "../types";
+import { WaitingStates, Message } from "../../types";
 
 function Message(props: {
   text: string;
@@ -54,7 +54,7 @@ function Message(props: {
 
 
 
-export default function Chat(props: {
+export default function MessageBoard(props: {
   waitingForSystem: WaitingStates;
   messages: Array<Message>;
 }) {

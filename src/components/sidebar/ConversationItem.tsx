@@ -1,6 +1,6 @@
-import { Conversation } from "../types";
+import { Conversation } from "../../types";
 
-const Conversation = (props: { conv: Conversation }) => {
+const ConversationItem = (props: { conv: Conversation }) => {
     return (
         <div className="conversation" data-convid={props.conv.id}>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="tabler-icon tabler-icon-message icon"><path d="M8 9h8"></path><path d="M8 13h6"></path><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"></path></svg>
@@ -15,4 +15,4 @@ const Conversation = (props: { conv: Conversation }) => {
     )
 }
 
-export default Conversation;
+export default ConversationItem;
