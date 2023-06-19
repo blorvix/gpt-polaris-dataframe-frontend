@@ -5,7 +5,7 @@ import SendIcon from "@mui/icons-material/Send";
 import TextareaAutosize from "react-textarea-autosize";
 import "./Input.css";
 
-export default function Input(props: { onSendMessage: any, onUploadFiles: any }) {
+export default function Input(props: { onSendMessage: any, onUploadFiles: any, disabled: boolean }) {
 
   let fileInputRef = useRef<HTMLInputElement>(null);
   let [inputIsFocused, setInputIsFocused] = useState<boolean>(false);
@@ -59,7 +59,7 @@ export default function Input(props: { onSendMessage: any, onUploadFiles: any })
             type="file"
             multiple
           />
-          <button type="button" onClick={handleUpload}>
+          <button type="button" onClick={handleUpload} disabled={props.disabled}>
             <FileUploadIcon />
           </button>
         </form>
@@ -71,6 +71,7 @@ export default function Input(props: { onSendMessage: any, onUploadFiles: any })
           value={userInput}
           rows={1}
           placeholder="Send a message"
+          readOnly={props.disabled}
         />
         <button className="send" onClick={handleSendMessage}>
           <SendIcon />
