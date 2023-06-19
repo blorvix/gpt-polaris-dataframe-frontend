@@ -67,7 +67,7 @@ export const uploadFileApi = (conv_id: number, file: any) => {
 
 export const sendMessageApi = (conv_id: number, message: string) => {
   return post(`/conversations/${conv_id}/messages`, {
-    prompt: message,
+    text: message,
   });
 }
 
