@@ -1,58 +1,8 @@
 import "./MessageBoard.css";
 import { useEffect, useRef } from "react";
 
-import VoiceChatIcon from "@mui/icons-material/VoiceChat";
-import PersonIcon from "@mui/icons-material/Person";
-
-import SyntaxHighlighter from "react-syntax-highlighter";
+import MessageBox from "./MessageBox";
 import { WaitingStates, Message } from "../../types";
-
-function Message(props: {
-  text: string;
-  role: string;
-  type: string;
-  showLoader?: boolean;
-}) {
-  let { text, role } = props;
-
-  return (
-    <div className={"message " + (role == "system" ? "system" : "user")}>
-      <div className="avatar-holder">
-        <div className="avatar">
-          {role == "system" ? <VoiceChatIcon /> : <PersonIcon />}
-        </div>
-      </div>
-      <div className="message-body">
-        {props.type == "code" && (
-          <div>
-            I generated the following code:
-            <SyntaxHighlighter wrapLongLines={true} language="python">
-              {text}
-            </SyntaxHighlighter>
-          </div>
-        )}
-
-        {(props.type == "text" || props.type == "message_raw") &&
-          (props.showLoader ? (
-            <div>
-              {text} {props.showLoader ? <div className="loader"></div> : null}
-            </div>
-          ) : (
-            <div className="cell-output" dangerouslySetInnerHTML={{ __html: text }}></div>
-          ))}
-        
-        {props.type == "image/png" &&
-          <div className="cell-output-image" dangerouslySetInnerHTML={{ __html: `<img src='data:image/png;base64,${text}' />` }}></div>
-        }
-        {props.type == "image/jpeg" &&
-          <div className="cell-output-image" dangerouslySetInnerHTML={{ __html: `<img src='data:image/jpeg;base64,${text}' />` }}></div>
-        }
-        </div>
-    </div>
-  );
-}
-
-
 
 export default function MessageBoard(props: {
   waitingForSystem: WaitingStates;
@@ -69,7 +19,7 @@ export default function MessageBoard(props: {
       <div className="chat-messages" ref={chatScrollRef}>
         {props.messages.map((message, index) => {
           return (
-            <Message
+            <MessageBox
               key={index}
               text={message.text}
               role={message.role}
@@ -78,7 +28,7 @@ export default function MessageBoard(props: {
           );
         })}
         {props.waitingForSystem != WaitingStates.Idle ? (
-          <Message
+          <MessageBox
             text={props.waitingForSystem}
             role="system"
             type="text"

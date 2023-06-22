@@ -35,32 +35,34 @@ export default function Sidebar(props: {converstations: any}) {
         <div className="logo">
           <AssistantIcon /> Data - GPT
         </div>
-        <div className='conversations'>
-          <NewConvButton />
-          <Divider light={true} />
-          {props.converstations.map((conv: any) => (
-            <ConversationItem key={conv.id} conv={conv} />
-          ))}
-        </div>
         {!!token && (
-        <div className="settings">
-          <label className="header">Settings</label>
-          <label>Model</label>
-          <select
-            value={user.openai_model}
-            onChange={saveModel}
-          >
-            {Config.MODELS.map((model, index) => {
-              return (
-                <option key={index} value={model.name}>
-                  {model.displayName}
-                </option>
-              );
-            })}
-          </select>
-          <label>Credentials</label>
-          <button onClick={handleOpenAIButtonClick}>Set OpenAI key</button>
-        </div>
+          <>
+          <div className='conversations'>
+            <NewConvButton />
+            <Divider light={true} />
+            {props.converstations.map((conv: any) => (
+              <ConversationItem key={conv.id} conv={conv} />
+            ))}
+          </div>
+          <div className="settings">
+            <label className="header">Settings</label>
+            <label>Model</label>
+            <select
+              value={user.openai_model}
+              onChange={saveModel}
+            >
+              {Config.MODELS.map((model, index) => {
+                return (
+                  <option key={index} value={model.name}>
+                    {model.displayName}
+                  </option>
+                );
+              })}
+            </select>
+            <label>Credentials</label>
+            <button onClick={handleOpenAIButtonClick}>Set OpenAI key</button>
+          </div>
+          </>
         )}
       </div>
     </>

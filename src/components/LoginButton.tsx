@@ -63,7 +63,7 @@ const LoginButton = (props: {afterLogin: any}) => {
 
     return (
         <>
-            <div style={{ width: "200px" }}>
+            <div style={{ width: "250px" }}>
                 {/* <GoogleLogin
                     render={renderProps => <GoogleButton {...renderProps} />}
                     clientId={Config.GOOGLE_CLIENT_ID}
@@ -82,6 +82,9 @@ const LoginButton = (props: {afterLogin: any}) => {
                     onError={() => {
                         console.log('login failed');
                     }}
+                    size='large'
+                    width='250'
+                    theme='filled_blue'
                 />
             </div>
         </>

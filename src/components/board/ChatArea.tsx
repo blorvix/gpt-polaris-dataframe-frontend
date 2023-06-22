@@ -38,7 +38,13 @@ const ChatArea = (props: { convId: number }) => {
       role: "user",
       type: "text",
     })
-    sendMessageApi(props.convId, message).then(message => addMessage(message))
+    
+    setWaitingForSystem(WaitingStates.GeneratingResponse)
+
+    sendMessageApi(props.convId, message).then(message => {
+      addMessage(message)
+      setWaitingForSystem(WaitingStates.Idle);
+    })
   }
 
   const uploadFiles = async (files: any) => {
@@ -62,7 +68,12 @@ const ChatArea = (props: { convId: number }) => {
       text: 'Yes, I will like.'
     })
 
-    getDatasetSummaryApi(props.convId).then(message => addMessage(message))
+    setWaitingForSystem(WaitingStates.GeneratingResponse)
+
+    getDatasetSummaryApi(props.convId).then(message => {
+      addMessage(message)
+      setWaitingForSystem(WaitingStates.Idle);
+    })
   }
 
   const noButtonClicked = () => {
@@ -84,7 +95,7 @@ const ChatArea = (props: { convId: number }) => {
       <Input
         onSendMessage={sendMessage}
         onUploadFiles={uploadFiles}
-        disabled={askQuestion}
+        disabled={askQuestion || (waitingForSystem !== WaitingStates.Idle)}
       />
     </div>
   )
