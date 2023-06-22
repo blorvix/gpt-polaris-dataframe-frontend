@@ -1,10 +1,13 @@
 import {createContext} from "react";
-import { User } from "../types";
-import Config from "../config";
+import { Conversation, User } from "./types";
 
-export const UserContext = createContext({
-    token: "",
-    setToken: (_: string) => {},
-    user: {openai_key: "", openai_model: Config.MODELS[0].name},
-    setUser: (_: User) => {},
-});
+export type UserContextType = {
+    token: string;
+    setToken: (_: string) => void;
+    user: User;
+    setUser: (_: User) => void;
+    currentConvId: number;
+    setCurrentConvId: (_: number) => void;
+}
+
+export const UserContext = createContext<UserContextType | null>(null);

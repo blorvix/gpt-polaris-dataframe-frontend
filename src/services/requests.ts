@@ -15,24 +15,33 @@ const getBaseConfig = (method: any, noContentType = false) => {
   }
 };
 
-const handleResponse = (resp: any) => {
+const handleResponse = async (resp: any) => {
+  const text = await resp.text()
   if (!resp.ok) {
-    throw resp.text();
+    throw "error occured"
   }
-  return resp.json();
+  try {
+    return JSON.parse(text)
+  } catch {
+    return text;
+  }
 }
 
 export const get = (url: string, options: any = {}) =>
   fetch(`${Config.API_URL}/${removeSlash(url)}`, { ...getBaseConfig('get'), ...options })
     .then(handleResponse)
 
-export const post = (url: string, data: any, options: any = {}) => {
+export const post = (url: string, data: any = {}, options: any = {}) => {
   return fetch(`${Config.API_URL}/${removeSlash(url)}`, {
     ...getBaseConfig('post'),
     ...options,
     body: (data instanceof FormData) ? data : JSON.stringify(data)
   }).then(handleResponse)
 }
+
+export const _delete = (url: string, options: any = {}) =>
+  fetch(`${Config.API_URL}/${removeSlash(url)}`, { ...getBaseConfig('delete'), ...options })
+    .then(handleResponse)
 
 export const postForm = (url: string, data: any, options: any = {}) => {
   return fetch(`${Config.API_URL}/${removeSlash(url)}`, {
@@ -52,6 +61,14 @@ export const saveUserInfoApi = (data: any) => {
 
 export const loadConversationsApi = () => {
   return get('/conversations/');
+}
+
+export const newConversationApi = () => {
+  return post('/conversations/');
+}
+
+export const deleteConversationApi = (conv_id: number) => {
+  return _delete(`/conversations/${conv_id}/`);
 }
 
 export const loadMessagesApi = (conv_id: number) => {

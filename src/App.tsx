@@ -3,13 +3,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import Dashboard from "./Dashboard";
+import Dashboard from "./components/pages/Dashboard";
 import { UserContext } from "./services/context";
 import { useLocalStorage } from "usehooks-ts";
-import { User } from './types';
+import { User } from './services/types';
 import Config from "./config";
 import {useState} from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { ConfirmProvider } from "material-ui-confirm";
 
 const router = createBrowserRouter([
   {
@@ -21,11 +22,14 @@ const router = createBrowserRouter([
 const App = () => {
   const [token, setToken] = useLocalStorage<string>("token", "");
   const [user, setUser] = useState<User>({openai_key: "", openai_model: Config.MODELS[0].name});
+  const [currentConvId, setCurrentConvId] = useState<number>(0);
   
   return (
-    <UserContext.Provider value={{ token, setToken, user, setUser }}>
+    <UserContext.Provider value={{ token, setToken, user, setUser, currentConvId, setCurrentConvId }}>
       <GoogleOAuthProvider clientId={Config.GOOGLE_CLIENT_ID}>
-        <RouterProvider router={router} />
+        <ConfirmProvider>
+          <RouterProvider router={router} />
+        </ConfirmProvider>
       </GoogleOAuthProvider>
     </UserContext.Provider>
   )

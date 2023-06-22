@@ -1,6 +1,6 @@
-const NewConvButton = () => {
+const NewConvButton = (props: {onClick: any}) => {
   return (
-    <div className='new-conv'>
+    <div className='new-conv' onClick={props.onClick}>
       <svg
         stroke="currentColor"
         fill="none"

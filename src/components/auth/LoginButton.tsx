@@ -1,16 +1,16 @@
 import React, { useEffect, useCallback, useContext } from 'react';
 import GoogleButton from 'react-google-button';
-import { notifyError } from '../services/notifications';
-import { validateTokenAndCreateUser } from '../services/requests';
-import Config from '../config';
-import { UserContext } from '../services/context';
+import { notifyError } from '../../services/notifications';
+import { validateTokenAndCreateUser } from '../../services/requests';
+import Config from '../../config';
+import { UserContext, UserContextType } from '../../services/context';
 import { GoogleLogin } from '@react-oauth/google';
 
 
 // const { REACT_APP_GOOGLE_CLIENT_ID, REACT_APP_BASE_BACKEND_URL } = process.env;
 
 const LoginButton = (props: {afterLogin: any}) => {
-    const {setToken, setUser} = useContext(UserContext)
+    const {setToken, setUser} = useContext(UserContext) as UserContextType
     // const openGoogleLoginPage = useCallback(() => {
     //     const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
     //     const redirectUri = 'auth/login/google/';

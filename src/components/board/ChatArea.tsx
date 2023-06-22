@@ -1,15 +1,17 @@
 import MessageBoard from "./MessageBoard";
 import Input from "./Input";
 import { useEffect, useRef, useState, useContext, useCallback } from "react";
-import { Conversation, Message, User, WaitingStates } from "../../types";
+import { Conversation, Message, User, WaitingStates } from "../../services/types";
 import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi } from "../../services/requests";
 import { Button } from '@mui/material'
 import './ChatArea.css'
+import { UserContext, UserContextType } from "../../services/context";
 
-const ChatArea = (props: { convId: number }) => {
+const ChatArea = (props: {}) => {
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [askQuestion, setAskQuestion] = useState<boolean>(false);
   const [waitingForSystem, setWaitingForSystem] = useState<WaitingStates>(WaitingStates.Idle);
+  const { currentConvId } = useContext(UserContext) as UserContextType;
 
   const startUpload = () => setWaitingForSystem(WaitingStates.UploadingFiles);
   const completeUpload = (file_count: number) => {
@@ -32,7 +34,8 @@ const ChatArea = (props: { convId: number }) => {
   }
 
   const sendMessage = (message: string) => {
-    if (!message.length) return;
+    if (!message.length || !currentConvId) return;
+
     addMessage({
       text: message,
       role: "user",
@@ -41,23 +44,25 @@ const ChatArea = (props: { convId: number }) => {
     
     setWaitingForSystem(WaitingStates.GeneratingResponse)
 
-    sendMessageApi(props.convId, message).then(message => {
+    sendMessageApi(currentConvId, message).then(message => {
       addMessage(message)
       setWaitingForSystem(WaitingStates.Idle);
     })
   }
 
   const uploadFiles = async (files: any) => {
+    if (!files.length || !currentConvId) return;
+
     startUpload()
     for (const file of files)
-      await uploadFileApi(props.convId, file).then(message => addMessage(message))
+      await uploadFileApi(currentConvId, file).then(message => addMessage(message))
     setTimeout(() => completeUpload(files.length), 300)
   }
 
   const loadMessages = useEffect(() => {
-    if (!props.convId) return;
-    loadMessagesApi(props.convId).then(messages => setMessages(messages))
-  }, [props.convId])
+    if (!currentConvId) return;
+    loadMessagesApi(currentConvId).then(messages => setMessages(messages))
+  }, [currentConvId])
 
   const yesButtonClicked = () => {
     setAskQuestion(false);
@@ -70,7 +75,7 @@ const ChatArea = (props: { convId: number }) => {
 
     setWaitingForSystem(WaitingStates.GeneratingResponse)
 
-    getDatasetSummaryApi(props.convId).then(message => {
+    getDatasetSummaryApi(currentConvId).then(message => {
       addMessage(message)
       setWaitingForSystem(WaitingStates.Idle);
     })
