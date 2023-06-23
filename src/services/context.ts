@@ -1,5 +1,5 @@
 import {createContext} from "react";
-import { Conversation, User } from "./types";
+import { User } from "./types";
 
 export type UserContextType = {
     token: string;

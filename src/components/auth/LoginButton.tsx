@@ -1,8 +1,6 @@
-import React, { useEffect, useCallback, useContext } from 'react';
-import GoogleButton from 'react-google-button';
+import { useContext } from 'react';
 import { notifyError } from '../../services/notifications';
 import { validateTokenAndCreateUser } from '../../services/requests';
-import Config from '../../config';
 import { UserContext, UserContextType } from '../../services/context';
 import { GoogleLogin } from '@react-oauth/google';
 

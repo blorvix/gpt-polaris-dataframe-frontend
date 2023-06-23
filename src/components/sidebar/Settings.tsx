@@ -1,6 +1,6 @@
 import Config from '../../config';
 import { UserContext, UserContextType } from '../../services/context';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { saveUserInfoApi } from '../../services/requests';
 
 const Settings = () => {

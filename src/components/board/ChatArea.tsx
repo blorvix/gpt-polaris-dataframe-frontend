@@ -1,20 +1,20 @@
 import MessageBoard from "./MessageBoard";
 import Input from "./Input";
-import { useEffect, useRef, useState, useContext, useCallback } from "react";
-import { Conversation, Message, User, WaitingStates } from "../../services/types";
+import { useEffect, useState, useContext } from "react";
+import { Message, WaitingStates } from "../../services/types";
 import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi } from "../../services/requests";
 import { Button } from '@mui/material'
 import './ChatArea.css'
 import { UserContext, UserContextType } from "../../services/context";
 
-const ChatArea = (props: {}) => {
+const ChatArea = () => {
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [askQuestion, setAskQuestion] = useState<boolean>(false);
   const [waitingForSystem, setWaitingForSystem] = useState<WaitingStates>(WaitingStates.Idle);
   const { currentConvId } = useContext(UserContext) as UserContextType;
 
   const startUpload = () => setWaitingForSystem(WaitingStates.UploadingFiles);
-  const completeUpload = (file_count: number) => {
+  const completeUpload = () => {
     setWaitingForSystem(WaitingStates.Idle);
 
     addMessage({
@@ -56,10 +56,10 @@ const ChatArea = (props: {}) => {
     startUpload()
     for (const file of files)
       await uploadFileApi(currentConvId, file).then(message => addMessage(message))
-    setTimeout(() => completeUpload(files.length), 300)
+    setTimeout(() => completeUpload(), 300)
   }
 
-  const loadMessages = useEffect(() => {
+  useEffect(() => {
     if (!currentConvId) return;
     loadMessagesApi(currentConvId).then(messages => setMessages(messages))
   }, [currentConvId])

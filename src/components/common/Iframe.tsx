@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { get } from '../../services/requests';
 
 const Iframe = (props: {src: string}) => {

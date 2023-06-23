@@ -2,7 +2,6 @@ import VoiceChatIcon from "@mui/icons-material/VoiceChat";
 import PersonIcon from "@mui/icons-material/Person";
 
 import SyntaxHighlighter from "react-syntax-highlighter";
-import Config from "../../config";
 import Iframe from "../common/Iframe";
 
 const MessageBox = (props: {

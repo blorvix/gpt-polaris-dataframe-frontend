@@ -1,14 +1,12 @@
 import AssistantIcon from '@mui/icons-material/Assistant';
-
-
 import "./Sidebar.css";
 import { UserContext, UserContextType } from '../../services/context';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 
 import ConversationList from './ConversationList';
 import Settings from './Settings';
 
-export default function Sidebar(props: {}) {
+export default function Sidebar() {
   const { token } = useContext(UserContext) as UserContextType;
 
   return (

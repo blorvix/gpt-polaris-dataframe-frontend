@@ -1,18 +1,16 @@
-import { useEffect, useRef, useState, useContext, useCallback } from "react";
-import { useLocalStorage } from "usehooks-ts";
+import { useEffect, useContext } from "react";
 import "./Dashboard.css";
 import LoginButton from "../auth/LoginButton";
 import Sidebar from "../sidebar/Sidebar";
-import { Conversation, Message, User, WaitingStates } from "../../services/types";
 import { UserContext, UserContextType } from "../../services/context";
-import { sendMessageApi, uploadFileApi, loadConversationsApi, loadUserInfoApi, loadMessagesApi, newConversationApi } from "../../services/requests";
+import { loadUserInfoApi } from "../../services/requests";
 import ChatArea from "../board/ChatArea";
 
 
 function Dashboard() {
   const {token, setToken, user, setUser} = useContext(UserContext) as UserContextType;
 
-  const onLoad = useEffect(() => {
+  useEffect(() => {
     // load conversations
     if (!token) return;
     loadUserInfoApi().then((data) => {

@@ -11,7 +11,7 @@ import { newConversationApi, deleteConversationApi, loadConversationsApi } from 
 
 const ConversationList = () => {
     const [conversations, setConversations] = useState<Array<Conversation>>([]);
-    const { token, currentConvId, setCurrentConvId } = useContext(UserContext) as UserContextType;
+    const { token, setCurrentConvId } = useContext(UserContext) as UserContextType;
 
     const addConversation = () => {
         newConversationApi().then(data => {
@@ -39,7 +39,7 @@ const ConversationList = () => {
         }
     }
 
-    const loadConversations = useEffect(() => {
+    useEffect(() => {
         if (!token) return
         loadConversationsApi().then(conversations => {
             setConversations(conversations)
@@ -51,7 +51,7 @@ const ConversationList = () => {
         <div className='conversations'>
             <NewConvButton onClick={addConversation} />
             <Divider light={true} />
-            {conversations.map((conv: Conversation, index: number) => (
+            {conversations.map((conv: Conversation) => (
                 <ConversationItem key={conv.id} conv={conv} onDelete={deleteConversation} onClick={setCurrentConvId} />
             ))}
         </div>
