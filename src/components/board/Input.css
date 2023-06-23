@@ -15,6 +15,10 @@ textarea:focus {
     outline: none
 }
 
+form.file-upload {
+    margin-bottom: 0;
+}
+
 form.file-upload button, button.send {
     border: 0;
     background: #eee;
