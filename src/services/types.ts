@@ -17,6 +17,16 @@ export type Message = {
     type: string;
 };
 
+export type File = {
+    id: number;
+    name: string;
+}
+
+// export type UploaedFile = {
+//     message: Message;
+//     file: File;
+// }
+
 export type Conversation = {
     id: number;
     name: string;

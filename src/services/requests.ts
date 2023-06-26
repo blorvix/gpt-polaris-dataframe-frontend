@@ -92,6 +92,6 @@ export const validateTokenAndCreateUser = (id_token: string) => {
   return post('auth/login', {id_token});
 };
 
-export const getDatasetSummaryApi = (conv_id: number) => {
-  return post(`/conversations/${conv_id}/summary`, {});
+export const getDatasetSummaryApi = (conv_id: number, file_id: number, file_name: string, wanted: boolean) => {
+  return post(`/conversations/${conv_id}/summary/${file_id}`, {file_name, wanted});
 }

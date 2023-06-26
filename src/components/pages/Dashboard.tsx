@@ -17,7 +17,7 @@ function Dashboard() {
       setUser(data)
     }).catch(() => {
       console.log("error")
-      setToken("")
+      // setToken("")
     })
   }, [])
 
