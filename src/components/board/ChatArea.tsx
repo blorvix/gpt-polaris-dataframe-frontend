@@ -1,36 +1,26 @@
 import MessageBoard from "./MessageBoard";
 import Input from "./Input";
 import { useEffect, useState, useContext } from "react";
-import { Message, File, WaitingStates } from "../../services/types";
-import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi } from "../../services/requests";
+import { Message, DataFile, WaitingStates, ProgressStep } from "../../services/types";
+import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi, getConversationApi } from "../../services/requests";
 import { Button } from '@mui/material'
 import './ChatArea.css'
 import { UserContext, UserContextType } from "../../services/context";
 
 const ChatArea = () => {
-  const [messages, setMessages] = useState<Array<Message>>([]);
-  // const [askQuestion, setAskQuestion] = useState<boolean>(false);
-  const [waitingForSystem, setWaitingForSystem] = useState<WaitingStates>(WaitingStates.Idle);
   const { currentConvId } = useContext(UserContext) as UserContextType;
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [fileSummaryIndex, setFileSummaryIndex] = useState<number>(-1);
+  
+  const [waitingForSystem, setWaitingForSystem] = useState<WaitingStates>(WaitingStates.Idle);
+  const [messages, setMessages] = useState<Array<Message>>([]);
+  const [dataFiles, setDataFiles] = useState<DataFile[]>([]);
+  const [currentFileIndex, setCurrentFileIndex] = useState<number>(-1);
 
   const startUpload = () => setWaitingForSystem(WaitingStates.UploadingFiles);
-  const completeUpload = () => {
-    setWaitingForSystem(WaitingStates.Idle);
-
-    // addMessage({
-    //   role: "system",
-    //   type: "text",
-    //   text: "Will you like to get some insights into the dataset?"
-    // })
-
-    // setAskQuestion(true)
-  }
+  const completeUpload = () => setWaitingForSystem(WaitingStates.Idle);
 
   const addMessage = (message: Message) => {
     setMessages(messages => [
-      ...messages,
+      ...messages, 
       message
     ])
   }
@@ -55,44 +45,48 @@ const ChatArea = () => {
   const uploadFiles = async (files: any) => {
     if (!files.length || !currentConvId) return;
 
-    const finishedFiles = new Array<File>();
-
     startUpload()
-    for (const file of files) {
-      await uploadFileApi(currentConvId, file).then(data => {
-        addMessage(data.message)
-        finishedFiles.push(data.file)
-      })
-    }
-    completeUpload()
 
-    setUploadedFiles(finishedFiles)
+    uploadFileApi(currentConvId, files).then(data => {
+      completeUpload()
+
+      setDataFiles([
+        ...dataFiles,
+        data.files
+      ])
+      setCurrentFileIndex(currentFileIndex + 1);
+    })
   }
 
   useEffect(() => {
     if (!currentConvId) return;
     loadMessagesApi(currentConvId).then(messages => setMessages(messages))
+    setWaitingForSystem(WaitingStates.Idle)
+    getConversationApi(currentConvId).then(data => {
+      setDataFiles(data.datafiles)
+      setCurrentFileIndex(data.current_file)
+    })
   }, [currentConvId])
 
   useEffect(() => {
-    if (uploadedFiles.length == 0) return;
+    if (currentFileIndex < 0 || currentFileIndex >= dataFiles.length) return;
 
-    setFileSummaryIndex(0);
-  }, [uploadedFiles])
-
-  useEffect(() => {
-    if (fileSummaryIndex < 0) return
-    if( fileSummaryIndex >= uploadedFiles.length) {
-      setFileSummaryIndex(-1)
-      return
+    if (dataFiles[currentFileIndex].progress_step == ProgressStep.None) {
+      
     }
+  }, [dataFiles, currentFileIndex])
 
-    addMessage({
-      role: "system",
-      type: "text",
-      text: `Will you like to get some insights into the dataset "${uploadedFiles[fileSummaryIndex].name}"?`
-    })
-  }, [fileSummaryIndex])
+  // useEffect(() => {
+  //   if( fileSummaryIndex >= uploadedFiles.length) {
+  //     return
+  //   }
+
+  //   addMessage({
+  //     role: "system",
+  //     type: "text",
+  //     text: `Will you like to get some insights into the dataset "${uploadedFiles[fileSummaryIndex].name}"?`
+  //   })
+  // }, [fileSummaryIndex])
 
   const yesButtonClicked = () => {
     addMessage({
@@ -103,11 +97,11 @@ const ChatArea = () => {
 
     setWaitingForSystem(WaitingStates.GeneratingResponse)
 
-    const file = uploadedFiles[fileSummaryIndex];
+    const file = dataFiles[currentFileIndex];
     getDatasetSummaryApi(currentConvId, file.id, file.name, true).then(message => {
       addMessage(message)
       setWaitingForSystem(WaitingStates.Idle);
-      setFileSummaryIndex(fileSummaryIndex + 1);
+      setCurrentFileIndex(currentFileIndex + 1);
     })
   }
 
@@ -118,13 +112,13 @@ const ChatArea = () => {
       text: 'No, thanks.'
     })
 
-    const file = uploadedFiles[fileSummaryIndex];
+    const file = dataFiles[currentFileIndex];
     getDatasetSummaryApi(currentConvId, file.id, file.name, false);
-    setFileSummaryIndex(fileSummaryIndex + 1);
+    setCurrentFileIndex(currentFileIndex + 1);
   }
 
   const questionVisible = () => {
-    return uploadFiles.length > 0 && fileSummaryIndex >= 0 && waitingForSystem == WaitingStates.Idle;
+    return dataFiles.length > 0 && currentFileIndex >= dataFiles.length && waitingForSystem == WaitingStates.Idle;
   }
 
   return (
@@ -143,9 +137,9 @@ const ChatArea = () => {
         onSendMessage={sendMessage}
         onUploadFiles={uploadFiles}
         disabled={questionVisible() || (waitingForSystem !== WaitingStates.Idle)}
-      />
-    </div>
-  )
-}
-
-export default ChatArea;
+        />
+      </div>
+    )
+  }
+  
+  export default ChatArea;

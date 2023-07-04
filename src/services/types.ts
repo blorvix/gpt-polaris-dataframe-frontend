@@ -11,15 +11,23 @@ export enum WaitingStates {
     Idle = "Idle",
 }
 
+export enum ProgressStep {
+    None = 0,
+    Cleanup = 1,
+    Summary = 2,
+    Vizhelp = 3,
+}
+
 export type Message = {
     text: string;
     role: string;
     type: string;
 };
 
-export type File = {
+export type DataFile = {
     id: number;
     name: string;
+    progress_step: number;
 }
 
 // export type UploaedFile = {

@@ -67,6 +67,10 @@ export const newConversationApi = () => {
   return post('/conversations/');
 }
 
+export const getConversationApi = (conv_id: number) => {
+  return get(`/conversations/${conv_id}/`);
+}
+
 export const deleteConversationApi = (conv_id: number) => {
   return _delete(`/conversations/${conv_id}/`);
 }
@@ -75,9 +79,10 @@ export const loadMessagesApi = (conv_id: number) => {
   return get(`/conversations/${conv_id}/messages`);
 }
 
-export const uploadFileApi = (conv_id: number, file: any) => {
+export const uploadFileApi = (conv_id: number, files: any) => {
   const formData = new FormData();
-  formData.append("file", file);
+  for (const file of files)
+    formData.append("files[]", file);
 
   return postForm(`/conversations/${conv_id}/upload`, formData);
 }
@@ -91,6 +96,10 @@ export const sendMessageApi = (conv_id: number, message: string) => {
 export const validateTokenAndCreateUser = (id_token: string) => {
   return post('auth/login', {id_token});
 };
+
+export const checkLoginedApi = () => {
+  return get('auth/check');
+}
 
 export const getDatasetSummaryApi = (conv_id: number, file_id: number, file_name: string, wanted: boolean) => {
   return post(`/conversations/${conv_id}/summary/${file_id}`, {file_name, wanted});
