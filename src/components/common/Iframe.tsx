@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { get } from '../../services/requests';
+import { getJson } from '../../services/requests';
 
 const Iframe = (props: {src: string}) => {
   const [content, setContent] = useState("");
   useEffect(() => {
-    get(props.src).then(data => {
+    getJson(props.src).then(data => {
       const blob = new Blob([data.html], { type: 'text/html' })
       const obj = URL.createObjectURL(blob)
       setContent(obj)

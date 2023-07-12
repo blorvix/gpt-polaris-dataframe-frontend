@@ -13,10 +13,12 @@ function Dashboard() {
   useEffect(() => {
     // load conversations
     if (!token) return;
-    loadUserInfoApi().then((data) => {
-      setUser(data)
+    loadUserInfoApi().then(async (resp) => {
+      if (resp.ok)
+        setUser(await resp.json())
+      else
+        setToken("")
     }).catch(() => {
-      console.log("error")
       // setToken("")
     })
   }, [])

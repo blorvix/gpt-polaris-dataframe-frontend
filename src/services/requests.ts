@@ -15,68 +15,58 @@ const getBaseConfig = (method: any, noContentType = false) => {
   }
 };
 
-const handleResponse = async (resp: any) => {
-  const text = await resp.text()
-  if (!resp.ok) {
-    throw "error occured"
-  }
-  try {
-    return JSON.parse(text)
-  } catch {
-    return text;
-  }
-}
-
 export const get = (url: string, options: any = {}) =>
   fetch(`${Config.API_URL}/${removeSlash(url)}`, { ...getBaseConfig('get'), ...options })
-    .then(handleResponse)
+export const getJson = (url: string, options: any = {}) => get(url, options).then(data => data.json())
 
-export const post = (url: string, data: any = {}, options: any = {}) => {
+const post = (url: string, data: any = {}, options: any = {}) => {
   return fetch(`${Config.API_URL}/${removeSlash(url)}`, {
     ...getBaseConfig('post'),
     ...options,
     body: (data instanceof FormData) ? data : JSON.stringify(data)
-  }).then(handleResponse)
+  })
 }
+const postJson = (url: string, data: any = {}, options: any = {}) => post(url, data, options).then(data => data.json())
 
-export const _delete = (url: string, options: any = {}) =>
+const _delete = (url: string, options: any = {}) =>
   fetch(`${Config.API_URL}/${removeSlash(url)}`, { ...getBaseConfig('delete'), ...options })
-    .then(handleResponse)
+const _deleteJson = (url: string, options: any = {}) => _delete(url, options).then(data => data.json())
 
 export const postForm = (url: string, data: any, options: any = {}) => {
   return fetch(`${Config.API_URL}/${removeSlash(url)}`, {
     ...getBaseConfig('post', true),
     ...options,
     body: data
-  }).then(handleResponse)
+  })
 }
+const postFormJson = (url: string, data: any, options: any = {}) => postForm(url, data, options).then(data => data.json())
 
 export const loadUserInfoApi = () => {
   return get('/user/')
 }
 
 export const saveUserInfoApi = (data: any) => {
-  return post('/user/', data)
+  return postJson('/user/', data)
 }
 
 export const loadConversationsApi = () => {
-  return get('/conversations/');
+  return getJson('/conversations/');
 }
 
 export const newConversationApi = () => {
-  return post('/conversations/');
+  return postJson('/conversations/');
 }
 
 export const getConversationApi = (conv_id: number) => {
-  return get(`/conversations/${conv_id}/`);
+  return getJson(`/conversations/${conv_id}/`);
 }
 
 export const deleteConversationApi = (conv_id: number) => {
-  return _delete(`/conversations/${conv_id}/`);
+  return _deleteJson(`/conversations/${conv_id}/`);
 }
 
 export const loadMessagesApi = (conv_id: number) => {
-  return get(`/conversations/${conv_id}/messages`);
+  return getJson(`/conversations/${conv_id}/messages`);
 }
 
 export const uploadFileApi = (conv_id: number, files: any) => {
@@ -84,23 +74,19 @@ export const uploadFileApi = (conv_id: number, files: any) => {
   for (const file of files)
     formData.append("files[]", file);
 
-  return postForm(`/conversations/${conv_id}/upload`, formData);
+  return postFormJson(`/conversations/${conv_id}/upload`, formData);
 }
 
 export const sendMessageApi = (conv_id: number, message: string) => {
-  return post(`/conversations/${conv_id}/messages`, {
+  return postJson(`/conversations/${conv_id}/messages`, {
     text: message,
   });
 }
 
 export const validateTokenAndCreateUser = (id_token: string) => {
-  return post('auth/login', {id_token});
+  return postJson('auth/login', {id_token});
 };
 
-export const checkLoginedApi = () => {
-  return get('auth/check');
-}
-
 export const getDatasetSummaryApi = (conv_id: number, file_id: number, file_name: string, wanted: boolean) => {
-  return post(`/conversations/${conv_id}/summary/${file_id}`, {file_name, wanted});
+  return postJson(`/conversations/${conv_id}/summary/${file_id}`, {file_name, wanted});
 }

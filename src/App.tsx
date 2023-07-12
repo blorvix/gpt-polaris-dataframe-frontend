@@ -11,7 +11,6 @@ import Config from "./config";
 import {useEffect, useState} from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ConfirmProvider } from "material-ui-confirm";
-import { checkLoginedApi } from "./services/requests";
 
 const router = createBrowserRouter([
   {
@@ -26,12 +25,6 @@ const App = () => {
   const [currentConvId, setCurrentConvId] = useState<number>(0);
 
   useEffect(() => {
-    const checkLogined = async () => {
-      const resp = await checkLoginedApi();
-      if (!resp.logined)
-        setToken("")
-    }
-    checkLogined()
   }, [])
   
   return (
