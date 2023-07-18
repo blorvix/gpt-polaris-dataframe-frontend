@@ -24,10 +24,28 @@ export type Message = {
     type: string;
 };
 
-export type DataFile = {
+export type DataSet = {
     id: number;
     name: string;
-    progress_step: number;
+    progress_step: ProgressStep;
+}
+
+export type UploadedFile = {
+    id: number;
+    datafile: {
+        id: number;
+        name: string;
+    };
+    same_dataset: {
+        id: number;
+        name: string;
+    } | null;
+    same_file_name: boolean;
+}
+
+export type UploadedFileHowto = {
+    id: number;
+    howto: string;
 }
 
 // export type UploaedFile = {
@@ -38,4 +56,12 @@ export type DataFile = {
 export type Conversation = {
     id: number;
     name: string;
+}
+
+export type Question = {
+    question: string;
+    options: {
+        text: string;
+        action: () => void;
+    }[]
 }

@@ -4,7 +4,7 @@ import LoginButton from "../auth/LoginButton";
 import Sidebar from "../sidebar/Sidebar";
 import { UserContext, UserContextType } from "../../services/context";
 import { loadUserInfoApi } from "../../services/requests";
-import ChatArea from "../board/ChatArea";
+import ChatArea from "../board/chatboard/ChatArea";
 
 
 function Dashboard() {

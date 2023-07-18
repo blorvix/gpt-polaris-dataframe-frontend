@@ -1,12 +1,12 @@
 import "./MessageBoard.css";
 import { useEffect, useRef } from "react";
-
 import MessageBox from "./MessageBox";
-import { WaitingStates, Message } from "../../services/types";
+import { WaitingStates, Message } from "../../../services/types";
 
 export default function MessageBoard(props: {
   waitingForSystem: WaitingStates;
   messages: Array<Message>;
+  extraSystemMessage: string | null;
 }) {
   const chatScrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -35,6 +35,13 @@ export default function MessageBoard(props: {
             showLoader={true}
           />
         ) : null}
+        {props.extraSystemMessage && 
+          <MessageBox
+            text={props.extraSystemMessage}
+            role="system"
+            type="text"
+          />}
+        
       </div>
     </>
   );

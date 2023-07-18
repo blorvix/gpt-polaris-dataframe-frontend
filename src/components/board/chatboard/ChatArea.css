@@ -1,8 +1,8 @@
-.yesno-buttons {
+.question-buttons {
     padding: 1rem;
     padding-bottom: 0;
 }
 
-.yes-button {
+.question-buttons button:not(:last-child) {
     margin-right: 1em !important;
 }

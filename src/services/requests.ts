@@ -1,4 +1,5 @@
 import Config from "../config"
+import { UploadedFileHowto } from "./types";
 import { removeSlash } from "./utils";
 
 const getBaseConfig = (method: any, noContentType = false) => {
@@ -77,9 +78,22 @@ export const uploadFileApi = (conv_id: number, files: any) => {
   return postFormJson(`/conversations/${conv_id}/upload`, formData);
 }
 
+export const saveDataFilesApi = (conv_id: number, howtos: UploadedFileHowto[]) => {
+  return postJson(`/conversations/${conv_id}/save_files`, {
+    filelists: howtos
+  })
+}
+
 export const sendMessageApi = (conv_id: number, message: string) => {
   return postJson(`/conversations/${conv_id}/messages`, {
     text: message,
+  });
+}
+
+export const forceAddMessageApi = (conv_id: number, role: string, text: string) => {
+  return postJson(`/conversations/${conv_id}/force_message`, {
+    role,
+    text,
   });
 }
 

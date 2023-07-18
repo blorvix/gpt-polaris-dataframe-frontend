@@ -1,0 +1,7 @@
+.navbar-buttons {
+    display: flex;
+    justify-content: end;
+    padding: 0.5em;
+    gap: 0.5em;
+    background: #303133;
+}
