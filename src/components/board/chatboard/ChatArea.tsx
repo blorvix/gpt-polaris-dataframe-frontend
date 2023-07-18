@@ -24,16 +24,16 @@ const ChatArea = () => {
   const startUpload = () => setWaitingForSystem(WaitingStates.UploadingFiles);
   const completeUpload = () => setWaitingForSystem(WaitingStates.Idle);
 
-  const addMessage = (message: Message, save: boolean=false, callback: any=null) => {
+  const addMessage = (message: Message) => {
     setMessages(messages => [
       ...messages, 
       message
     ])
-    if (save) {
-      forceAddMessageApi(currentConvId, message.role, message.text).then(() => {
-        if (callback) callback()
-      })
-    }
+    // if (save) {
+    //   forceAddMessageApi(currentConvId, message.role, message.text).then(() => {
+    //     if (callback) callback()
+    //   })
+    // }
   }
 
   const sendMessage = (message: string) => {
@@ -80,7 +80,7 @@ const ChatArea = () => {
           setQuestions(questions => [
             ...questions,
             {
-              question: `${uploadedFile.datafile.name} already exists in the "${uploadedFile.same_dataset.name}" dataset. Do you want to overwrite it?`,
+              question: `${uploadedFile.datafile.name} already exists in the \`${uploadedFile.same_dataset.name}\` dataset. Do you want to overwrite it?`,
               options: ['Overwrite', 'Rename', 'Skip'].map(howto => ({
                 text: howto,
                 action: () => answerUploadedFileOverwrite(uploadedFile.id, howto.toLowerCase())
@@ -91,7 +91,7 @@ const ChatArea = () => {
           answerUploadedFileOverwrite(uploadedFile.id, 'overwrite')
         }
       }
-    }) 
+    })
   }
 
   const loadConversation = useCallback(() => {
@@ -114,10 +114,34 @@ const ChatArea = () => {
     }
   }, [uploadedFileHowtos])
 
+  // useEffect(() => {
+  //   if (dataSets.length <= 0 || currentFileIndex >= dataSets.length) return;
+  //   const dataset = dataSets[currentFileIndex]
+  //   if (dataset.progress_step == ProgressStep.None) {
+  //     setQuestions(questions => [
+  //       ...questions,
+  //       {
+  //         question: `Do you want to perform some data cleanup activities to ensure the \`${dataset.name}\` dataset is ready for analysis?`,
+  //         options: [{
+  //           text: 'Yes',
+  //           action: () => {}
+  //         }, {
+  //           text: 'No',
+  //           action: () => {}
+  //         }]
+  //       }
+  //     ])
+  //   }
+  // }, [dataSets, currentFileIndex])
+
   useEffect(() => {
     if (!currentConvId) return;
-    loadMessages()
+    setUploadedFilesCount(0)
+    setUploadedFileHowtos([])
+    setQuestions([])
+    setDataModalOpen(false)
     setWaitingForSystem(WaitingStates.Idle)
+    loadMessages()
     loadConversation()
   }, [currentConvId])
 
@@ -179,16 +203,14 @@ const ChatArea = () => {
       text: questions[0].question,
       role: 'system',
       type: 'text'
-    }, true, () => {
-      addMessage({
-        text: option.text,
-        role: 'user',
-        type: 'text'
-      }, true, () => {
-        setQuestions(questions => questions.slice(1))
-        if (option.action) option.action()
-      })
     })
+    addMessage({
+      text: option.text,
+      role: 'user',
+      type: 'text'
+    })
+    setQuestions(questions => questions.slice(1))
+    if (option.action) option.action()
   }
 
   return (
