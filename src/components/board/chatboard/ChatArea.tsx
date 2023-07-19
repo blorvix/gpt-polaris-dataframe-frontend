@@ -2,7 +2,7 @@ import MessageBoard from "./MessageBoard";
 import Input from "./Input";
 import { useEffect, useState, useContext, useCallback } from "react";
 import { Message, WaitingStates, ProgressStep, DataSet, UploadedFile, Question, UploadedFileHowto } from "../../../services/types";
-import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi, getConversationApi, saveDataFilesApi, forceAddMessageApi } from "../../../services/requests";
+import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi, getConversationApi, saveDataFilesApi, forceAddMessageApi, askCleanupApi, performCleanupApi, getVizHelpApi } from "../../../services/requests";
 import { Button } from '@mui/material'
 import './ChatArea.css'
 import { UserContext, UserContextType } from "../../../services/context";
@@ -15,11 +15,16 @@ const ChatArea = () => {
   const [waitingForSystem, setWaitingForSystem] = useState<WaitingStates>(WaitingStates.Idle);
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [dataSets, setDataSets] = useState<DataSet[]>([]);
+  const [currentDatasetIndex, setCurrentDatasetIndex] = useState<number>(-1);
+  const [dataModalOpen, setDataModalOpen] = useState<boolean>(false);
+
+  const [questions, setQuestions] = useState<Question[]>([]);
+  
   const [uploadedFilesCount, setUploadedFilesCount] = useState<number>(0);
   const [uploadedFileHowtos, setUploadedFileHowtos] = useState<UploadedFileHowto[]>([])
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [currentFileIndex, setCurrentFileIndex] = useState<number>(-1);
-  const [dataModalOpen, setDataModalOpen] = useState<boolean>(false);
+
+  const [cleanupQuestionsCount, setCleanupQuestionsCount] = useState<number>(0);
+  const [cleanupAnswers, setCleanupAnswers] = useState<string[]>([])
 
   const startUpload = () => setWaitingForSystem(WaitingStates.UploadingFiles);
   const completeUpload = () => setWaitingForSystem(WaitingStates.Idle);
@@ -64,7 +69,6 @@ const ChatArea = () => {
   }
 
   const uploadFiles = async (files: any) => {
-    console.log('uploadFiles', files, currentConvId)
     if (!files.length || !currentConvId) return;
 
     startUpload()
@@ -97,9 +101,9 @@ const ChatArea = () => {
   const loadConversation = useCallback(() => {
     getConversationApi(currentConvId).then(data => {
       setDataSets(data.datasets)
-      setCurrentFileIndex(data.current_file)
+      setCurrentDatasetIndex(data.current_file)
     })
-  }, [currentConvId, setDataSets, setCurrentFileIndex])
+  }, [currentConvId, setDataSets, setCurrentDatasetIndex])
 
   const loadMessages = useCallback(() => {
     loadMessagesApi(currentConvId).then(messages => setMessages(messages))
@@ -114,89 +118,53 @@ const ChatArea = () => {
     }
   }, [uploadedFileHowtos])
 
-  // useEffect(() => {
-  //   if (dataSets.length <= 0 || currentFileIndex >= dataSets.length) return;
-  //   const dataset = dataSets[currentFileIndex]
-  //   if (dataset.progress_step == ProgressStep.None) {
-  //     setQuestions(questions => [
-  //       ...questions,
-  //       {
-  //         question: `Do you want to perform some data cleanup activities to ensure the \`${dataset.name}\` dataset is ready for analysis?`,
-  //         options: [{
-  //           text: 'Yes',
-  //           action: () => {}
-  //         }, {
-  //           text: 'No',
-  //           action: () => {}
-  //         }]
-  //       }
-  //     ])
-  //   }
-  // }, [dataSets, currentFileIndex])
+  const addCleanupAnswer = (question: string, answer: string) => {
+    setCleanupAnswers(answers => [...answers, question, answer])
+  }
 
   useEffect(() => {
-    if (!currentConvId) return;
-    setUploadedFilesCount(0)
-    setUploadedFileHowtos([])
-    setQuestions([])
-    setDataModalOpen(false)
-    setWaitingForSystem(WaitingStates.Idle)
-    loadMessages()
-    loadConversation()
-  }, [currentConvId])
+    if (cleanupQuestionsCount > 0 && cleanupAnswers.length == 2 * cleanupQuestionsCount) {
+      performCleanupApi(currentConvId, dataSets[currentDatasetIndex].id, cleanupAnswers).then(message => {
+        addMessage(message)
+      })
+    }
+  }, [cleanupAnswers])
 
-  // useEffect(() => {
-  //   if (currentFileIndex < 0 || currentFileIndex >= dataFiles.length) return;
+  const askCleanup = (ask: string) => {
+    const request = askCleanupApi(currentConvId, dataSets[currentDatasetIndex].id, ask)
+    if (ask == 'yes') {
+      request.then((questions) => {
+        setCleanupQuestionsCount(questions.length)
+        setCleanupAnswers([])
 
-  //   if (dataFiles[currentFileIndex].progress_step == ProgressStep.None) {
-      
-  //   }
-  // }, [dataFiles, currentFileIndex])
+        for (const question of questions) {
+          addYesNoQuestion(
+            question,
+            () => addCleanupAnswer(question, 'Yes'),
+            () => addCleanupAnswer(question, 'No')
+          )
+        }
+      })
+    } else {
+      gotoNextDatasetProgress()
+    }
+  }
 
-  // useEffect(() => {
-  //   if( fileSummaryIndex >= uploadedFiles.length) {
-  //     return
-  //   }
-
-  //   addMessage({
-  //     role: "system",
-  //     type: "text",
-  //     text: `Will you like to get some insights into the dataset "${uploadedFiles[fileSummaryIndex].name}"?`
-  //   })
-  // }, [fileSummaryIndex])
-
-  // const yesButtonClicked = () => {
-  //   addMessage({
-  //     role: 'user',
-  //     type: 'text',
-  //     text: 'Yes, I will like.'
-  //   })
-
-  //   setWaitingForSystem(WaitingStates.GeneratingResponse)
-
-  //   const file = dataFiles[currentFileIndex];
-  //   getDatasetSummaryApi(currentConvId, file.id, file.name, true).then(message => {
-  //     addMessage(message)
-  //     setWaitingForSystem(WaitingStates.Idle);
-  //     setCurrentFileIndex(currentFileIndex + 1);
-  //   })
-  // }
-
-  // const noButtonClicked = () => {
-  //   addMessage({
-  //     role: 'user',
-  //     type: 'text',
-  //     text: 'No, thanks.'
-  //   })
-
-  //   const file = dataFiles[currentFileIndex];
-  //   getDatasetSummaryApi(currentConvId, file.id, file.name, false);
-  //   setCurrentFileIndex(currentFileIndex + 1);
-  // }
-
-  // const questionVisible = () => {
-  //   return dataFiles.length > 0 && currentFileIndex >= dataFiles.length && waitingForSystem == WaitingStates.Idle;
-  // }
+  const addYesNoQuestion = (question: string, yesAction: any, noAction: any) => {
+    setQuestions(questions => [
+      ...questions,
+      {
+        question: question,
+        options: [{
+          text: 'Yes',
+          action: yesAction
+        }, {
+          text: 'No',
+          action: noAction
+        }]
+      }
+    ])
+  }
 
   const questionAnswered = (option: any) => {
     addMessage({
@@ -212,6 +180,86 @@ const ChatArea = () => {
     setQuestions(questions => questions.slice(1))
     if (option.action) option.action()
   }
+
+  const getSummary = (ask: string) => {
+    const request = getDatasetSummaryApi(currentConvId, dataSets[currentDatasetIndex].id, ask)
+    if (ask == 'yes') {
+      request.then((message) => {
+        addMessage(message)
+        gotoNextDatasetProgress()
+      })
+    } else {
+      gotoNextDatasetProgress()
+    }
+  }
+
+  const getVizHelp = (ask: string) => {
+    const request = getVizHelpApi(currentConvId, dataSets[currentDatasetIndex].id, ask)
+    if (ask == 'yes') {
+      request.then((message) => {
+        addMessage(message)
+        gotoNextDatasetProgress()
+      })
+    } else {
+      gotoNextDatasetProgress()
+    }
+  }
+
+  const checkDatasetProgress = () => {
+    if (dataSets.length <= 0 || currentDatasetIndex >= dataSets.length) return;
+    console.log(dataSets.length, currentDatasetIndex)
+    const dataset = dataSets[currentDatasetIndex]
+    console.log(dataset.progress_step)
+    if (dataset.progress_step == ProgressStep.Cleanup) {
+      addYesNoQuestion(
+        `Do you want to perform some data cleanup activities to ensure the \`${dataset.name}\` dataset is ready for analysis?`,
+        () => askCleanup('yes'),
+        () => askCleanup('no')
+      )
+    } else if (dataset.progress_step == ProgressStep.Summary) {
+      addYesNoQuestion(
+        `Will you like to get some insights into the \`${dataset.name}\` dataset?`,
+        () => getSummary('yes'),
+        () => getSummary('no')
+      )
+    } else if (dataset.progress_step == ProgressStep.Vizhelp) {
+      addYesNoQuestion(
+        `Will you like more details on the variables recommended for visualizations?`,
+        () => getVizHelp('yes'),
+        () => getVizHelp('no')
+      )
+    } else if (dataset.progress_step == ProgressStep.Completed) {
+      setCurrentDatasetIndex(currentDatasetIndex + 1)
+    }
+  }
+
+  useEffect(() => {
+    checkDatasetProgress()
+  }, [dataSets, currentDatasetIndex])
+
+  const gotoNextDatasetProgress = () => {
+    const dataset = dataSets[currentDatasetIndex];
+    dataset.progress_step += 1;
+    checkDatasetProgress()
+  }
+
+  useEffect(() => {
+    if (!currentConvId) return;
+    
+    setDataModalOpen(false)
+    setWaitingForSystem(WaitingStates.Idle)
+    
+    setQuestions([])
+    
+    setUploadedFilesCount(0)
+    setUploadedFileHowtos([])
+
+    setCleanupQuestionsCount(0)
+    setCleanupAnswers([])
+
+    loadMessages()
+    loadConversation()
+  }, [currentConvId])
 
   return (
     <div className="main">

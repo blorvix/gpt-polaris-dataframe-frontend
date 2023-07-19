@@ -25,7 +25,6 @@ export default function Input(props: { onSendMessage: any, onUploadFiles: any, d
   };
 
   const handleFileChange = (e: any) => {
-    console.log('handleFileChange', e.target.files)
     if (e.target.files.length > 0) {
       props.onUploadFiles(e.target.files);
     }

@@ -101,6 +101,18 @@ export const validateTokenAndCreateUser = (id_token: string) => {
   return postJson('auth/login', {id_token});
 };
 
-export const getDatasetSummaryApi = (conv_id: number, file_id: number, file_name: string, wanted: boolean) => {
-  return postJson(`/conversations/${conv_id}/summary/${file_id}`, {file_name, wanted});
+export const getDatasetSummaryApi = (conv_id: number, dataset_id: number, ask: string) => {
+  return postJson(`/conversations/${conv_id}/summary/${dataset_id}/ask`, {ask});
+}
+
+export const getVizHelpApi = (conv_id: number, dataset_id: number, ask: string) => {
+  return postJson(`/conversations/${conv_id}/vizhelp/${dataset_id}/ask`, {ask});
+}
+
+export const askCleanupApi = (conv_id: number, dataset_id: number, ask: string) => {
+  return postJson(`/conversations/${conv_id}/cleanup/${dataset_id}/ask`, {ask});
+}
+
+export const performCleanupApi = (conv_id: number, dataset_id: number, answers: string[]) => {
+  return postJson(`/conversations/${conv_id}/cleanup/${dataset_id}/perform`, {answers});
 }

@@ -12,10 +12,10 @@ export enum WaitingStates {
 }
 
 export enum ProgressStep {
-    None = 0,
-    Cleanup = 1,
-    Summary = 2,
-    Vizhelp = 3,
+    Cleanup = 0,
+    Summary = 1,
+    Vizhelp = 2,
+    Completed = 3,
 }
 
 export type Message = {
