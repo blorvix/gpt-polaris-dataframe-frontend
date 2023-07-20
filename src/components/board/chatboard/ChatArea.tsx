@@ -1,8 +1,8 @@
 import MessageBoard from "./MessageBoard";
 import Input from "./Input";
 import { useEffect, useState, useContext, useCallback } from "react";
-import { Message, WaitingStates, ProgressStep, DataSet, UploadedFile, Question, UploadedFileHowto } from "../../../services/types";
-import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi, getConversationApi, saveDataFilesApi, forceAddMessageApi, askCleanupApi, performCleanupApi, getVizHelpApi } from "../../../services/requests";
+import { Message, WaitingStates, ProgressStep, DataSet, Question, UploadedFileHowto } from "../../../services/types";
+import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi, getConversationApi, saveDataFilesApi, askCleanupApi, performCleanupApi, getVizHelpApi } from "../../../services/requests";
 import { Button } from '@mui/material'
 import './ChatArea.css'
 import { UserContext, UserContextType } from "../../../services/context";
@@ -11,15 +11,15 @@ import NavBar from "./NavBar";
 
 const ChatArea = () => {
   const { currentConvId } = useContext(UserContext) as UserContextType;
-  
+
   const [waitingForSystem, setWaitingForSystem] = useState<WaitingStates>(WaitingStates.Idle);
   const [messages, setMessages] = useState<Array<Message>>([]);
   const [dataSets, setDataSets] = useState<DataSet[]>([]);
   const [currentDatasetIndex, setCurrentDatasetIndex] = useState<number>(-1);
-  const [dataModalOpen, setDataModalOpen] = useState<boolean>(false);
+  const [_, setDataModalOpen] = useState<boolean>(false);
 
   const [questions, setQuestions] = useState<Question[]>([]);
-  
+
   const [uploadedFilesCount, setUploadedFilesCount] = useState<number>(0);
   const [uploadedFileHowtos, setUploadedFileHowtos] = useState<UploadedFileHowto[]>([])
 
@@ -31,7 +31,7 @@ const ChatArea = () => {
 
   const addMessage = (message: Message) => {
     setMessages(messages => [
-      ...messages, 
+      ...messages,
       message
     ])
     // if (save) {
@@ -255,12 +255,12 @@ const ChatArea = () => {
 
   useEffect(() => {
     if (!currentConvId) return;
-    
+
     setDataModalOpen(false)
     setWaitingForSystem(WaitingStates.Idle)
-    
+
     setQuestions([])
-    
+
     setUploadedFilesCount(0)
     setUploadedFileHowtos([])
 
@@ -273,7 +273,7 @@ const ChatArea = () => {
 
   return (
     <div className="main">
-      <NavBar onUploadClick={() => setDataModalOpen(true)} onDashboardClick={() => {}}></NavBar>
+      <NavBar onUploadClick={() => setDataModalOpen(true)} onDashboardClick={() => { }}></NavBar>
       <MessageBoard
         waitingForSystem={waitingForSystem}
         messages={messages}
@@ -292,7 +292,7 @@ const ChatArea = () => {
         onSendMessage={sendMessage}
         onUploadFiles={uploadFiles}
         disabled={questions.length > 0 || (waitingForSystem !== WaitingStates.Idle)}
-        />
+      />
       {/* <DataModal open={dataModalOpen} setOpen={setDataModalOpen} /> */}
     </div>
   )
