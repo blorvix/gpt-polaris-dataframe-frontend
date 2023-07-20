@@ -30,12 +30,13 @@ const ConversationList = () => {
 
         deleteConversationApi(id)
 
+        const newConvId = count > 1 ? conversations[Math.min(i, conversations.length - 1)].id : 0;
         setConversations(conversations => conversations.filter((conversation: Conversation) => conversation.id !== id));
 
         if (count == 1) {
             addConversation()
         } else {
-            setCurrentConvId(conversations[Math.min(i, conversations.length - 1)].id)
+            setCurrentConvId(newConvId)
         }
     }
 

@@ -124,8 +124,11 @@ const ChatArea = () => {
 
   useEffect(() => {
     if (cleanupQuestionsCount > 0 && cleanupAnswers.length == 2 * cleanupQuestionsCount) {
+      setWaitingForSystem(WaitingStates.GeneratingResponse)
       performCleanupApi(currentConvId, dataSets[currentDatasetIndex].id, cleanupAnswers).then(message => {
+        setWaitingForSystem(WaitingStates.Idle)
         addMessage(message)
+        gotoNextDatasetProgress()
       })
     }
   }, [cleanupAnswers])
@@ -133,7 +136,9 @@ const ChatArea = () => {
   const askCleanup = (ask: string) => {
     const request = askCleanupApi(currentConvId, dataSets[currentDatasetIndex].id, ask)
     if (ask == 'yes') {
+      setWaitingForSystem(WaitingStates.GeneratingResponse)
       request.then((questions) => {
+        setWaitingForSystem(WaitingStates.Idle)
         setCleanupQuestionsCount(questions.length)
         setCleanupAnswers([])
 
@@ -167,8 +172,10 @@ const ChatArea = () => {
   }
 
   const questionAnswered = (option: any) => {
+    const question = questions[0].question
+    setQuestions(questions => questions.filter(q => q.question !== question))
     addMessage({
-      text: questions[0].question,
+      text: question,
       role: 'system',
       type: 'text'
     })
@@ -177,14 +184,15 @@ const ChatArea = () => {
       role: 'user',
       type: 'text'
     })
-    setQuestions(questions => questions.slice(1))
     if (option.action) option.action()
   }
 
   const getSummary = (ask: string) => {
     const request = getDatasetSummaryApi(currentConvId, dataSets[currentDatasetIndex].id, ask)
     if (ask == 'yes') {
+      setWaitingForSystem(WaitingStates.GeneratingResponse)
       request.then((message) => {
+        setWaitingForSystem(WaitingStates.Idle)
         addMessage(message)
         gotoNextDatasetProgress()
       })
@@ -196,7 +204,9 @@ const ChatArea = () => {
   const getVizHelp = (ask: string) => {
     const request = getVizHelpApi(currentConvId, dataSets[currentDatasetIndex].id, ask)
     if (ask == 'yes') {
+      setWaitingForSystem(WaitingStates.GeneratingResponse)
       request.then((message) => {
+        setWaitingForSystem(WaitingStates.Idle)
         addMessage(message)
         gotoNextDatasetProgress()
       })
