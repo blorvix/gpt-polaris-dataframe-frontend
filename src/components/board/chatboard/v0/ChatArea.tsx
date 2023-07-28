@@ -1,11 +1,11 @@
 import MessageBoard from "./MessageBoard";
 import Input from "./Input";
 import { useEffect, useState, useContext, useCallback } from "react";
-import { Message, WaitingStates, ProgressStep, DataSet, Question, UploadedFileHowto } from "../../../services/types";
-import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi, getConversationApi, saveDataFilesApi, askCleanupApi, performCleanupApi, getVizHelpApi } from "../../../services/requests";
+import { Message, WaitingStates, ProgressStep, DataSet, Question, UploadedFileHowto } from "../../../../services/types";
+import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi, getConversationApi, saveDataFilesApi, askCleanupApi, performCleanupApi, getVizHelpApi } from "../../../../services/requests";
 import { Button } from '@mui/material'
 import './ChatArea.css'
-import { UserContext, UserContextType } from "../../../services/context";
+import { UserContext, UserContextType } from "../../../../services/context";
 import NavBar from "./NavBar";
 // import DataModal from "./DataModal";
 

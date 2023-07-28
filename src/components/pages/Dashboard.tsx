@@ -4,8 +4,7 @@ import LoginButton from "../auth/LoginButton";
 import Sidebar from "../sidebar/Sidebar";
 import { UserContext, UserContextType } from "../../services/context";
 import { loadUserInfoApi } from "../../services/requests";
-import ChatArea from "../board/chatboard/ChatArea";
-
+import ChatArea from "../board/chatboard/v1/ChatArea";
 
 function Dashboard() {
   const {token, setToken, user, setUser} = useContext(UserContext) as UserContextType;
@@ -29,7 +28,9 @@ function Dashboard() {
         <Sidebar/>
         {!!token ? (
           user.openai_key ? (
-            <ChatArea />
+            <div className="main">
+              <ChatArea />
+            </div>
           ) : (
             <div className="flex-center">
               You need to set openai key to continue.

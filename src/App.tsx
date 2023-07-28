@@ -6,11 +6,13 @@ import {
 import Dashboard from "./components/pages/Dashboard";
 import { UserContext } from "./services/context";
 import { useLocalStorage } from "usehooks-ts";
-import { User } from './services/types';
+import { User } from '#/types/chat';
 import Config from "./config";
 import {useEffect, useState} from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ConfirmProvider } from "material-ui-confirm";
+import { ToastContainer } from 'react-toastify'
+import './styles/globals.css'
 
 const router = createBrowserRouter([
   {
@@ -34,6 +36,7 @@ const App = () => {
           <RouterProvider router={router} />
         </ConfirmProvider>
       </GoogleOAuthProvider>
+      <ToastContainer />
     </UserContext.Provider>
   )
 }

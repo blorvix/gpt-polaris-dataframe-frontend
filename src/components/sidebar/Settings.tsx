@@ -30,6 +30,7 @@ const Settings = () => {
       <select
         value={user.openai_model}
         onChange={saveModel}
+        style={{padding:'5px'}}
       >
         {Config.MODELS.map((model, index) => {
           return (

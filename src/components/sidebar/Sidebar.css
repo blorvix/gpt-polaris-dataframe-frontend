@@ -9,7 +9,7 @@
     color: #fff;
 }
 
-.logo {
+.sidebar .logo {
     text-align: center;
     font-weight: bold;
     font-size: 1.5rem;
@@ -17,16 +17,16 @@
     flex: 0 0 55px;
 }
 
-.github a {
+.sidebar .github a {
     color: #999;
     font-size: 0.8rem;
 }
 
-a:hover {
+.sidebar a:hover {
     color: #fff;
 }
 
-.logo svg {
+.sidebar .logo svg {
     color: #fff;
     width: 35px;
     height: 35px;
@@ -40,32 +40,32 @@ a:hover {
     flex: 0 0 200px;
 }
 
-button, select {
-    padding: 0.8rem;
+.sidebar button, select {
+    padding: 0.4rem;
     border: none;
     border-radius: .25rem;
     background-color: #333;
     color: #fff;
 }
 
-select option {
+.sidebar select option {
     padding: 0.8rem;
 }
 
-button {
+.sidebar button {
     cursor: pointer;
     margin-bottom: 0.5rem;
     background: #74a89b;
 }
 
-label {
+.sidebar label {
     font-size: 0.9rem;
     color: #999;
     margin-top: .5rem;
     margin-bottom: .25rem;
 }
 
-label.header {
+.sidebar label.header {
     font-size: 1.2rem;
 }
 

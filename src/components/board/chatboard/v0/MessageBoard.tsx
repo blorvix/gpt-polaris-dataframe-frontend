@@ -1,7 +1,7 @@
 import "./MessageBoard.css";
 import { useEffect, useRef } from "react";
 import MessageBox from "./MessageBox";
-import { WaitingStates, Message } from "../../../services/types";
+import { WaitingStates, Message } from "../../../../services/types";
 
 export default function MessageBoard(props: {
   waitingForSystem: WaitingStates;

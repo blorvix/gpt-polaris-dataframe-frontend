@@ -13,12 +13,18 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    // "paths": {
+    //   "@/*": [
+    //     "./src/*"
+    //   ]
+    // },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "postcss.config.cjs"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
