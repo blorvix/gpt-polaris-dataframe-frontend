@@ -5,6 +5,7 @@ import Sidebar from "../sidebar/Sidebar";
 import { UserContext, UserContextType } from "../../services/context";
 import { loadUserInfoApi } from "../../services/requests";
 import ChatArea from "../board/chatboard/v1/ChatArea";
+import GoogleSignIn from "#/components/auth/GoogleSignIn"
 
 function Dashboard() {
   const {token, setToken, user, setUser} = useContext(UserContext) as UserContextType;
@@ -12,7 +13,7 @@ function Dashboard() {
   useEffect(() => {
     // load conversations
     if (!token) {
-      setToken("abcd");
+      // setToken("abcd");
       return
     }
     loadUserInfoApi().then(async (resp) => {
@@ -41,6 +42,7 @@ function Dashboard() {
           )
         ) : <>
           <div className="flex-center">
+            <GoogleSignIn/>
             {/* <LoginButton afterLogin={() => {}} /> */}
           </div>
         </>}
