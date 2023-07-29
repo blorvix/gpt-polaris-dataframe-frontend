@@ -109,6 +109,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
   }
 
   const isHTML = message.role == 'function' && message.name == 'html';
+  const isFunction = message.name == 'function_call';
 
   return (
     <div
@@ -146,7 +147,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
             {isHTML && (
               <Iframe src={'/conversations/graph/' + message.content} ></Iframe>
             )}
-            {!isHTML && message.function_call && (
+            {!isHTML && isFunction && (
               <CollapsibleSection title="Function call" isStreaming={isStreaming} isCurrentMessage={isCurrentMessage} >
                 {/* <div className='bg-gray-400 h-5 pl-2 text-black text-sm text-left mr-7'>content</div> */}
                 {/* @ts-ignore */}
@@ -195,13 +196,13 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
                     }
                   }}
                 >
-                  {message.function_call.arguments}
+                  {message.content}
 
                 </MemoizedReactMarkdown >
                 <div></div>
               </CollapsibleSection>
             )}
-            {!isHTML && content && (
+            {!isHTML && !isFunction && content && (
               <MemoizedReactMarkdown
                 className="dark:text-slate-200 prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
                 remarkPlugins={[remarkGfm, remarkMath]}
