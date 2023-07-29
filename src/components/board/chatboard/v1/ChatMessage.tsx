@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { components } from '#/types/openai';
 import { MemoizedReactMarkdown } from './Markdown'
 import { CodeBlock } from './Codeblock'
+import Iframe from '#/components/common/Iframe';
 
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
@@ -105,6 +106,8 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
     content += '▍';
   }
 
+  const isHTML = message.role == 'function' && message.name == 'html';
+
   return (
     <div
       className={`group md:px-4 ${message.role === 'user'
@@ -138,7 +141,10 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
         <div className=" mt-[-2px] w-full">
           {/* {content && (
             checkContent(content) ? */}
-            {message.function_call && (
+            {isHTML && (
+              <Iframe src={'/conversations/graph/' + message.content} ></Iframe>
+            )}
+            {!isHTML && message.function_call && (
               <CollapsibleSection title="Function call" isStreaming={isStreaming} isCurrentMessage={isCurrentMessage} >
                 {/* <div className='bg-gray-400 h-5 pl-2 text-black text-sm text-left mr-7'>content</div> */}
                 <MemoizedReactMarkdown
@@ -191,7 +197,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
                 </MemoizedReactMarkdown >
               </CollapsibleSection>
             )}
-            {content && (
+            {!isHTML && content && (
               <MemoizedReactMarkdown
                 className="dark:text-slate-200 prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
                 remarkPlugins={[remarkGfm, remarkMath]}

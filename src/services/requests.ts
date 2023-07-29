@@ -84,11 +84,14 @@ export const saveDataFilesApi = (conv_id: number, howtos: UploadedFileHowto[]) =
   })
 }
 
-export const sendMessageApi = (conv_id: number, message: string, regenerate: boolean) => {
+export const sendMessageApi = (conv_id: number, message: string) => {
   return postJson(`/conversations/${conv_id}/messages`, {
     content: message,
-    regenerate: regenerate
   });
+}
+
+export const regenerateMessageApi = (conv_id: number) => {
+  return postJson(`/conversations/${conv_id}/messages/regenerate`);
 }
 
 export const forceAddMessageApi = (conv_id: number, role: string, text: string) => {

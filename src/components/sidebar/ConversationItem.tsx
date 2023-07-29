@@ -1,4 +1,4 @@
-import { Conversation } from "../../services/types";
+import { Conversation } from "#/types/chat"
 import { useConfirm } from "material-ui-confirm";
 
 const ConversationItem = (props: { conv: Conversation, onDelete: any, onClick: any }) => {

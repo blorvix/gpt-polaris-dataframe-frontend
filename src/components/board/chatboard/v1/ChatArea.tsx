@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { UploadedFile } from './UploadedFile'
 import { UserContext, UserContextType } from "../../../../services/context";
-import { loadMessagesApi, uploadFileApi, sendMessageApi } from '#/services/requests';
+import { loadMessagesApi, uploadFileApi, sendMessageApi, regenerateMessageApi } from '#/services/requests';
 
 
 export default function Chat() {
@@ -31,6 +31,9 @@ export default function Chat() {
 
   useEffect(() => {
     loadMessagesApi(currentConvId).then(messages => setMessages(messages))
+    setNewMessage('')
+    setIsTyping(false)
+    setMessageIsStreaming(false)
   }, [currentConvId])
 
   const onUploadFile = async (event: any) => {
@@ -38,7 +41,7 @@ export default function Chat() {
     setMessageIsStreaming(true)
     uploadFileApi(currentConvId, event.target.files).then((resp) => {
       toast.success('File uploaded successfully');
-      setMessageIsStreaming (false)
+      setMessageIsStreaming(false)
       setMessages(prevMessages => [...prevMessages, ...resp])
     })
 
@@ -194,7 +197,7 @@ export default function Chat() {
       setNewMessage('')
       setMessages(prevMessages => [...prevMessages, newUserMessage])
 
-      sendMessageApi(currentConvId, newUserMessage.content, deleteCount > 0).then((resp) => {
+      sendMessageApi(currentConvId, newUserMessage.content).then((resp) => {
         setMessages(prevMessages => [...prevMessages, ...resp])
         setMessageIsStreaming(false)
       })
@@ -297,7 +300,23 @@ export default function Chat() {
   };
 
   const regenerateResponseHandler = async () => {
+    setMessages(prevMessages => {
+      let i;
+      for (i = prevMessages.length - 1; i >= 0; i--) {
+        if (prevMessages[i].role == 'user')
+          break
+      }
+      if (i >= 0)
+        return prevMessages.slice(0, i + 1);
+      else
+        return prevMessages;
+    })
     setMessageIsStreaming(true);
+    regenerateMessageApi(currentConvId).then((resp) => {
+      setMessages(prevMessages => [...prevMessages, ...resp])
+      setMessageIsStreaming(false)
+    })
+    return
     const lastUserMessageIndex = messages.reduce((lastIndex, message, index) => {
       return message.role === 'user' ? index : lastIndex;
     }, -1);
@@ -374,7 +393,7 @@ export default function Chat() {
         <div className="absolute border-0 bottom-0 left-0 w-full dark:border-orange-200 bg-gradient-to-b from-transparent via-white to-white pt-6 dark:via-[#1f232a] dark:to-[#1f232a] md:pt-2">
           <div className="stretch mt-4 flex flex-row gap-3 last:mb-2 md:mx-4 md:mt-[52px] md:last:mb-6 lg:mx-auto lg:max-w-3xl">
             <div className="relative flex h-full flex-1 items-stretch md:flex-col" role="presentation">
-              <div className="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
+              {/* <div className="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center">
                 {messageIsStreaming ? (
                   <button
                     className="dark:bg-gray-800 bg-white text-black dark:text-gray-100 dark:hover:bg-gray-900 hover:bg-gray-200  hidden md:block btn relative btn-neutral -z-0 border-0 md:border"
@@ -387,7 +406,7 @@ export default function Chat() {
                       Stop Generating
                     </div>
                   </button>
-                ) : conversationStarted ? (
+                ) : (conversationStarted && messages.length > 0) ? (
                   <button
                     className="dark:bg-gray-800 bg-white text-black dark:text-gray-100 dark:hover:bg-gray-900 hover:bg-gray-200 hidden md:block btn relative btn-neutral -z-0 border-0 md:border"
                     onClick={regenerateResponseHandler}
@@ -400,7 +419,7 @@ export default function Chat() {
                     </div>
                   </button>
                 ) : null}
-              </div>
+              </div> */}
 
               <div className=" relative flex mx-1 flex-col h-full flex-1 items-stretch border-black/10 bg-slate-100 shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:bg-gray-700 dark:text-white dark:focus:border-12 dark:shadow-[0_0_20px_rgba(0,0,0,0.10)] sm:mx-4 rounded-xl dark:outline-none outline-none">
 

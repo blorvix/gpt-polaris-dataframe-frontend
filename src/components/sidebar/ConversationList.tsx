@@ -5,7 +5,7 @@ import NewConvButton from "./NewConvButton"
 import Divider from '@mui/material/Divider';
 import ConversationItem from "./ConversationItem";
 
-import { Conversation } from '../../services/types';
+import { Conversation } from '#/types/chat'
 import { UserContextType, UserContext } from '../../services/context';
 import { newConversationApi, deleteConversationApi, loadConversationsApi } from '../../services/requests';
 
@@ -21,6 +21,7 @@ const ConversationList = () => {
     }
 
     const deleteConversation = (id: number) => {
+        console.log('delete conv', id)
         let i = 0, count = conversations.length;
         for (; i < count; i++) {
             if (conversations[i].id == id)
