@@ -29,7 +29,7 @@ function Dashboard() {
         {!!token ? (
           user.openai_key ? (
             <div className="main">
-              <ChatArea />
+              {/* <ChatArea /> */}
             </div>
           ) : (
             <div className="flex-center">

@@ -1,5 +1,5 @@
 import Config from "../config"
-import { UploadedFileHowto } from "./types";
+import { UploadedFileHowto } from "#/types/chat";
 import { removeSlash } from "./utils";
 
 const getBaseConfig = (method: any, noContentType = false) => {
@@ -84,9 +84,10 @@ export const saveDataFilesApi = (conv_id: number, howtos: UploadedFileHowto[]) =
   })
 }
 
-export const sendMessageApi = (conv_id: number, message: string) => {
+export const sendMessageApi = (conv_id: number, message: string, regenerate: boolean) => {
   return postJson(`/conversations/${conv_id}/messages`, {
     text: message,
+    regenerate: regenerate
   });
 }
 

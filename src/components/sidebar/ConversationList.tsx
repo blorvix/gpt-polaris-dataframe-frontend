@@ -44,7 +44,8 @@ const ConversationList = () => {
         if (!token) return
         loadConversationsApi().then(conversations => {
             setConversations(conversations)
-            setCurrentConvId(conversations[0].id)
+            if (conversations.length > 0)
+                setCurrentConvId(conversations[0].id)
         })
     }, [token])
 

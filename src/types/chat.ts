@@ -29,11 +29,11 @@ export enum ProgressStep {
     Completed = 3,
 }
 
-export type Message = {
-    text: string;
-    role: string;
-    type: string;
-};
+// export type Message = {
+//     text: string;
+//     role: string;
+//     type: string;
+// };
 
 export type DataSet = {
     id: number;
@@ -41,18 +41,18 @@ export type DataSet = {
     progress_step: ProgressStep;
 }
 
-export type UploadedFile = {
-    id: number;
-    datafile: {
-        id: number;
-        name: string;
-    };
-    same_dataset: {
-        id: number;
-        name: string;
-    } | null;
-    same_file_name: boolean;
-}
+// export type UploadedFile = {
+//     id: number;
+//     datafile: {
+//         id: number;
+//         name: string;
+//     };
+//     same_dataset: {
+//         id: number;
+//         name: string;
+//     } | null;
+//     same_file_name: boolean;
+// }
 
 export type UploadedFileHowto = {
     id: number;

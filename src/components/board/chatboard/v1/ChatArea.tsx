@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, MutableRefObject, useCallback } from 'react';
+import { useState, useContext, useEffect, useRef, MutableRefObject, useCallback } from 'react';
 import { Model, SYSTEM_PROMPT, SYSTEM_PROMPT_CODE_INTERPRETER } from '#/constants/openai';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import ChatMessage from './ChatMessage'
@@ -7,9 +7,13 @@ import { Message } from '#/utils/services/openai/openai-stream';
 import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { UploadedFile } from './UploadedFile'
+import { UserContext, UserContextType } from "../../../../services/context";
+import { loadMessagesApi, uploadFileApi, sendMessageApi } from '#/services/requests';
 
 
 export default function Chat() {
+  const { currentConvId } = useContext(UserContext) as UserContextType;
+
   const [selectedModel, setSelectedModel] = useState(Model.GPT3_5_CODE_INTERPRETER_16K);
   const [messages, setMessages] = useState<Message[]>([{ role: 'system', content: selectedModel === Model.GPT3_5_CODE_INTERPRETER_16K || Model.GPT4_CODE_INTERPRETER ? SYSTEM_PROMPT_CODE_INTERPRETER : SYSTEM_PROMPT }]);
   const [newMessage, setNewMessage] = useState('');
@@ -25,8 +29,19 @@ export default function Chat() {
   const [resubmitLastMessage, setResubmitLastMessage] = useState(false);
   const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(null);
 
+  useEffect(() => {
+    loadMessagesApi(currentConvId).then(messages => setMessages(messages))
+  }, [currentConvId])
+
   const onUploadFile = async (event: any) => {
-    const file = event.target.files[0];
+    uploadFileApi(currentConvId, event.target.files).then((resp) => {
+      toast.success('File uploaded successfully');
+      setMessages(prevMessages => [...prevMessages, ...resp])
+    })
+
+    return
+
+    const file = event.target.files[0]
     const formData = new FormData();
 
     formData.append('file', file);
@@ -166,9 +181,23 @@ export default function Chat() {
 
   const handleSendMessage = useCallback(
     async (event?: React.FormEvent, deleteCount: number = 0) => {
+      if (newMessage.length == 0) return
+
       event?.preventDefault();
       setMessageIsStreaming(true);
       setConversationStarted(true);
+
+      const newUserMessage: Message = { role: 'user', content: newMessage ?? '' };
+      setNewMessage('')
+      setMessages(prevMessages => [...prevMessages, newUserMessage])
+
+      sendMessageApi(currentConvId, newUserMessage.content, deleteCount > 0).then((resp) => {
+        setMessages(prevMessages => [...prevMessages, ...resp])
+        setMessageIsStreaming(false)
+      })
+
+      return
+
       let chatHistory: Message[] = [];
       if (deleteCount) {
         const updatedMessages = [...messages];
