@@ -1,6 +1,5 @@
 import { useEffect, useContext } from "react";
 import "./Dashboard.css";
-import LoginButton from "../auth/LoginButton";
 import Sidebar from "../sidebar/Sidebar";
 import { UserContext, UserContextType } from "../../services/context";
 import { loadUserInfoApi } from "../../services/requests";

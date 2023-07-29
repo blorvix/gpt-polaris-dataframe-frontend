@@ -1,6 +1,6 @@
-import { components } from '@/types/openai';
-import { OpenAIEndpoints } from '@/constants/openai';
-import { getFetchOptions } from '@/utils/app/fetch';
+import { components } from '#/types/openai';
+import { OpenAIEndpoints } from '#/constants/openai';
+import { getFetchOptions } from '#/utils/app/fetch';
 import { createOpenAIStreamTransformer } from './stream-transformer';
 
 /**

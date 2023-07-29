@@ -1,5 +1,5 @@
-import { components } from '@/types/openai';
-import { Model, modelMap } from '@/constants/openai';
+import { components } from '#/types/openai';
+import { Model, modelMap } from '#/constants/openai';
 
 /**
  * Creates the payload for an OpenAI API request.

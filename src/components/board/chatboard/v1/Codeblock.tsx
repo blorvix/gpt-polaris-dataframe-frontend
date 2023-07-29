@@ -49,6 +49,7 @@ export const generateRandomString = (length: number, lowercase = false) => {
   return lowercase ? result.toLowerCase() : result
 }
 
+// @ts-ignore
 const CodeBlock: FC<Props> = memo(({ language, value, isStreaming, isCurrentMessage }) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const copyToClipboard = () => {

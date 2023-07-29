@@ -57,6 +57,7 @@ export function repl(code: string, language: string) {
 export function command(command: string): Promise<string> {
     const { exec } = require('child_process');
     return new Promise<string>((resolve, reject) => {
+        // @ts-ignore
         exec(command, (error: Error, stdout: string, stderr: string) => {
             if (error) {
                 reject(error);

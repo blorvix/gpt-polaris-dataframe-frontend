@@ -1,11 +1,11 @@
 import "./MessageBoard.css";
 import { useEffect, useRef } from "react";
 import MessageBox from "./MessageBox";
-import { WaitingStates, Message } from "../../../../services/types";
+import { WaitingStates, Message__ } from "#/types/chat"
 
 export default function MessageBoard(props: {
   waitingForSystem: WaitingStates;
-  messages: Array<Message>;
+  messages: Array<Message__>;
   extraSystemMessage: string | null;
 }) {
   const chatScrollRef = useRef<HTMLDivElement>(null);

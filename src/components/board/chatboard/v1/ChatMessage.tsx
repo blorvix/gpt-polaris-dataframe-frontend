@@ -26,6 +26,7 @@ type AvatarProps = {
   lastMessageRole: string;
 };
 
+// @ts-ignore
 const Avatar: React.FC<AvatarProps> = ({ role, lastMessageRole }) => {
   const [darkMode, setDarkMode] = useState(false);
   useEffect(() => {
@@ -85,11 +86,12 @@ const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({ title, children
   );
 };
 
-
+// @ts-ignore
 function checkContent(content: string) {
   return content.includes('{"function_call":') || content.includes('result:');
 }
 
+// @ts-ignore
 const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMessage, streamingMessageIndex, lastMessage, messageIndex, hoveredMessageIndex, setHoveredMessageIndex }) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const copyToClipboard = () => {
@@ -147,6 +149,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
             {!isHTML && message.function_call && (
               <CollapsibleSection title="Function call" isStreaming={isStreaming} isCurrentMessage={isCurrentMessage} >
                 {/* <div className='bg-gray-400 h-5 pl-2 text-black text-sm text-left mr-7'>content</div> */}
+                {/* @ts-ignore */}
                 <MemoizedReactMarkdown
                   className="dark:text-slate-200 prose break-words bg-gray-950 overflow-x-scroll p-4 dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
                   remarkPlugins={[remarkGfm, remarkMath]}
@@ -195,6 +198,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
                   {message.function_call.arguments}
 
                 </MemoizedReactMarkdown >
+                <div></div>
               </CollapsibleSection>
             )}
             {!isHTML && content && (

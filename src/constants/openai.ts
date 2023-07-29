@@ -4,6 +4,7 @@
 /**
  * Interface representing a mapping of operation IDs to their corresponding paths.
  */
+// @ts-ignore
 interface PathMap {
   [key: string]: string;
 }

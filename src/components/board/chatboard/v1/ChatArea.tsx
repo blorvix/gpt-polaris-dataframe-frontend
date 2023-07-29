@@ -2,31 +2,33 @@ import { useState, useContext, useEffect, useRef, MutableRefObject, useCallback 
 import { Model, SYSTEM_PROMPT, SYSTEM_PROMPT_CODE_INTERPRETER } from '#/constants/openai';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import ChatMessage from './ChatMessage'
-import { OpenAIError } from '#/utils/util';
 import { Message } from '#/utils/services/openai/openai-stream';
 import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { UploadedFile } from './UploadedFile'
 import { UserContext, UserContextType } from "../../../../services/context";
-import { loadMessagesApi, uploadFileApi, sendMessageApi, regenerateMessageApi } from '#/services/requests';
+import { loadMessagesApi, uploadFileApi, sendMessageApi } from '#/services/requests';
 
 
 export default function Chat() {
   const { currentConvId } = useContext(UserContext) as UserContextType;
 
+  // @ts-ignore
   const [selectedModel, setSelectedModel] = useState(Model.GPT3_5_CODE_INTERPRETER_16K);
   const [messages, setMessages] = useState<Message[]>([{ role: 'system', content: selectedModel === Model.GPT3_5_CODE_INTERPRETER_16K || Model.GPT4_CODE_INTERPRETER ? SYSTEM_PROMPT_CODE_INTERPRETER : SYSTEM_PROMPT }]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [messageIsStreaming, setMessageIsStreaming] = useState(false);
   const [conversationStarted, setConversationStarted] = useState(true);
+  // @ts-ignore
   const [isFunctionCall, setIsFunctionCall] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const cancelStreamRef: MutableRefObject<boolean> = useRef(false);
   const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  // @ts-ignore
   const [fileIsAttached, setFileIsAttached] = useState<boolean>(false);
-  const [resubmitLastMessage, setResubmitLastMessage] = useState(false);
+  // const [resubmitLastMessage, setResubmitLastMessage] = useState(false);
   const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -47,37 +49,37 @@ export default function Chat() {
 
     return
 
-    const file = event.target.files[0]
-    const formData = new FormData();
+    // const file = event.target.files[0]
+    // const formData = new FormData();
 
-    formData.append('file', file);
-    const fileData = formData.get('file');
-    const fileName = fileData instanceof File ? fileData.name : '';
+    // formData.append('file', file);
+    // const fileData = formData.get('file');
+    // const fileName = fileData instanceof File ? fileData.name : '';
 
-    console.log('formData: ', formData);
+    // console.log('formData: ', formData);
 
-    try {
-      const response = await fetch('http://localhost:3333/upload', {
-        method: 'POST',
-        body: formData
-      });
+    // try {
+    //   const response = await fetch('http://localhost:3333/upload', {
+    //     method: 'POST',
+    //     body: formData
+    //   });
 
-      const data = await response.json();
+    //   const data = await response.json();
 
-      if (response.ok) {
-        console.log('OK')
-        toast.success('File uploaded successfully');
+    //   if (response.ok) {
+    //     console.log('OK')
+    //     toast.success('File uploaded successfully');
 
-        setUploadedFileName(fileName);
-        setUploadedFileUrl(data.url);
-        setFileIsAttached(true);
-        console.log('data.url: ', data.url)
-      } else {
-        toast.error(`Upload failed: ${data.message}`);
-      }
-    } catch (error) {
-      toast.error(`Upload failed: ${(error as Error).message}`);
-    }
+    //     setUploadedFileName(fileName);
+    //     setUploadedFileUrl(data.url);
+    //     setFileIsAttached(true);
+    //     console.log('data.url: ', data.url)
+    //   } else {
+    //     toast.error(`Upload failed: ${data.message}`);
+    //   }
+    // } catch (error) {
+    //   toast.error(`Upload failed: ${(error as Error).message}`);
+    // }
   };
 
   const onDeleteFile = async () => {
@@ -108,6 +110,7 @@ export default function Chat() {
    * @param abortController - The AbortController used to cancel the fetch request.
    * @returns The content of the assistant message.
    */
+  // @ts-ignore
   const fetchChat = async (messages: Message[], abortController: AbortController) => {
     const response = await fetch('/api/chat', {
       method: 'POST',
@@ -186,6 +189,7 @@ export default function Chat() {
   };
 
   const handleSendMessage = useCallback(
+    // @ts-ignore
     async (event?: React.FormEvent, deleteCount: number = 0) => {
       if (newMessage.length == 0) return
 
@@ -197,137 +201,137 @@ export default function Chat() {
       setNewMessage('')
       setMessages(prevMessages => [...prevMessages, newUserMessage])
 
-      sendMessageApi(currentConvId, newUserMessage.content).then((resp) => {
+      sendMessageApi(currentConvId, newUserMessage?.content || '').then((resp) => {
         setMessages(prevMessages => [...prevMessages, ...resp])
         setMessageIsStreaming(false)
       })
 
       return
 
-      let chatHistory: Message[] = [];
-      if (deleteCount) {
-        const updatedMessages = [...messages];
-        for (let i = 0; i < deleteCount; i++) {
-          updatedMessages.pop();
-        }
-        setMessages(updatedMessages);
-        chatHistory = updatedMessages;
-      } else {
+      // let chatHistory: Message[] = [];
+      // if (deleteCount) {
+      //   const updatedMessages = [...messages];
+      //   for (let i = 0; i < deleteCount; i++) {
+      //     updatedMessages.pop();
+      //   }
+      //   setMessages(updatedMessages);
+      //   chatHistory = updatedMessages;
+      // } else {
 
-        const newUserMessage: Message = { role: 'user', content: newMessage ?? '' };
-        setNewMessage('');
-        setMessages(prevMessages => [...prevMessages, newUserMessage]);
+      //   const newUserMessage: Message = { role: 'user', content: newMessage ?? '' };
+      //   setNewMessage('');
+      //   setMessages(prevMessages => [...prevMessages, newUserMessage]);
 
-        if (textareaRef.current) {
-          textareaRef.current.style.height = "56px";
-        }
+      //   if (textareaRef.current) {
+      //     textareaRef.current.style.height = "56px";
+      //   }
 
-        if (uploadedFileUrl) {
-          newUserMessage.content += `\n\(Uploaded file: ${uploadedFileName})`;
-          setFileIsAttached(false);
-          setUploadedFileUrl(null);
-          setUploadedFileName(null);
-          setFileIsAttached(false);
-        }
-        chatHistory = [...messages, newUserMessage];
-      }
-      const abortController = new AbortController();
+      //   if (uploadedFileUrl) {
+      //     newUserMessage.content += `\n\(Uploaded file: ${uploadedFileName})`;
+      //     setFileIsAttached(false);
+      //     setUploadedFileUrl(null);
+      //     setUploadedFileName(null);
+      //     setFileIsAttached(false);
+      //   }
+      //   chatHistory = [...messages, newUserMessage];
+      // }
+      // const abortController = new AbortController();
 
-      try {
-        let assistantMessageContent = await fetchChat(chatHistory, abortController);
+      // try {
+      //   let assistantMessageContent = await fetchChat(chatHistory, abortController);
 
-        const functionCallIndex = assistantMessageContent.indexOf('{"function_call":');
-        if (functionCallIndex !== -1) {
-          const functionCallStr = assistantMessageContent.slice(functionCallIndex);
-          console.log('functionCallStr: ', functionCallStr)
-          const parsed = JSON.parse(functionCallStr);
-          let functionName = parsed.function_call.name
-          let functionArgumentsStr = parsed.function_call.arguments;
+      //   const functionCallIndex = assistantMessageContent.indexOf('{"function_call":');
+      //   if (functionCallIndex !== -1) {
+      //     const functionCallStr = assistantMessageContent.slice(functionCallIndex);
+      //     console.log('functionCallStr: ', functionCallStr)
+      //     const parsed = JSON.parse(functionCallStr);
+      //     let functionName = parsed.function_call.name
+      //     let functionArgumentsStr = parsed.function_call.arguments;
 
-          const requestBody = functionArgumentsStr;
-          if (functionName == 'python') functionName = 'repl_repl_post'
-          // let endpoint = pathMap[functionName as keyof operations];
-          let endpoint = null;
-          if (!endpoint) {
-            // throw new Error('Endpoint is undefined');
-            const functionCallMessage: Message = { role: 'assistant', content: `I'm sorry, I used the incorret function name '${functionName}'. Let me try again:\n` };
-            setMessages(prevMessages => [...prevMessages, functionCallMessage]);
-            fetchChat([...messages, functionCallMessage], abortController);
-          } else {
-            console.log('endpoint: ', endpoint)
-            console.log('################### you need to uncomment code here')
-            // const pluginResponse = await fetch(`${serverUrl}${endpoint}`, {
-            //   method: 'POST',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify({
-            //     language: 'python',
-            //     code: requestBody
-            //   })
-            // });
+      //     const requestBody = functionArgumentsStr;
+      //     if (functionName == 'python') functionName = 'repl_repl_post'
+      //     // let endpoint = pathMap[functionName as keyof operations];
+      //     let endpoint = null;
+      //     if (!endpoint) {
+      //       // throw new Error('Endpoint is undefined');
+      //       const functionCallMessage: Message = { role: 'assistant', content: `I'm sorry, I used the incorret function name '${functionName}'. Let me try again:\n` };
+      //       setMessages(prevMessages => [...prevMessages, functionCallMessage]);
+      //       fetchChat([...messages, functionCallMessage], abortController);
+      //     } else {
+      //       console.log('endpoint: ', endpoint)
+      //       console.log('################### you need to uncomment code here')
+      //       // const pluginResponse = await fetch(`${serverUrl}${endpoint}`, {
+      //       //   method: 'POST',
+      //       //   headers: { 'Content-Type': 'application/json' },
+      //       //   body: JSON.stringify({
+      //       //     language: 'python',
+      //       //     code: requestBody
+      //       //   })
+      //       // });
 
-            // const parsedFunctionCallResponse = await pluginResponse.json();
-            // console.log('parsedFunctionCallResponse: ', parsedFunctionCallResponse)
-            // console.log('parsedFunctionCallResponse.result: ', parsedFunctionCallResponse.result ?? '')
-            // const functionCallMessage: Message = { role: 'function', name: functionName, content: `result: ${parsedFunctionCallResponse.result}` ?? 'result: ok' };
-            // setMessages(prevMessages => [...prevMessages, functionCallMessage]);
-            // fetchChat([...messages, functionCallMessage], abortController);
-          }
-        }
-      } catch (error) {
-        if (error instanceof OpenAIError) {
-          alert(`OpenAIError: ${error.message}`);
-        } else if (error instanceof Error) {
-          alert(`Error: ${error.message}`);
-        }
-        setMessageIsStreaming(false);
-        setIsFunctionCall(false);
-        setNewMessage('');
-      }
-      setMessageIsStreaming(false);
-      setIsFunctionCall(false);
-      setNewMessage('');
+      //       // const parsedFunctionCallResponse = await pluginResponse.json();
+      //       // console.log('parsedFunctionCallResponse: ', parsedFunctionCallResponse)
+      //       // console.log('parsedFunctionCallResponse.result: ', parsedFunctionCallResponse.result ?? '')
+      //       // const functionCallMessage: Message = { role: 'function', name: functionName, content: `result: ${parsedFunctionCallResponse.result}` ?? 'result: ok' };
+      //       // setMessages(prevMessages => [...prevMessages, functionCallMessage]);
+      //       // fetchChat([...messages, functionCallMessage], abortController);
+      //     }
+      //   }
+      // } catch (error) {
+      //   if (error instanceof OpenAIError) {
+      //     alert(`OpenAIError: ${error.message}`);
+      //   } else if (error instanceof Error) {
+      //     alert(`Error: ${error.message}`);
+      //   }
+      //   setMessageIsStreaming(false);
+      //   setIsFunctionCall(false);
+      //   setNewMessage('');
+      // }
+      // setMessageIsStreaming(false);
+      // setIsFunctionCall(false);
+      // setNewMessage('');
     },
     [messages, newMessage, selectedModel, cancelStreamRef, uploadedFileUrl, uploadedFileName, messageIsStreaming],
   );
 
-  const stopConversationHandler = () => {
-    setMessageIsStreaming(false);
-    setNewMessage('');
-    cancelStreamRef.current = true;
-    setTimeout(() => {
-      cancelStreamRef.current = false;
-    }, 1000);
-  };
+  // const stopConversationHandler = () => {
+  //   setMessageIsStreaming(false);
+  //   setNewMessage('');
+  //   cancelStreamRef.current = true;
+  //   setTimeout(() => {
+  //     cancelStreamRef.current = false;
+  //   }, 1000);
+  // };
 
-  const regenerateResponseHandler = async () => {
-    setMessages(prevMessages => {
-      let i;
-      for (i = prevMessages.length - 1; i >= 0; i--) {
-        if (prevMessages[i].role == 'user')
-          break
-      }
-      if (i >= 0)
-        return prevMessages.slice(0, i + 1);
-      else
-        return prevMessages;
-    })
-    setMessageIsStreaming(true);
-    regenerateMessageApi(currentConvId).then((resp) => {
-      setMessages(prevMessages => [...prevMessages, ...resp])
-      setMessageIsStreaming(false)
-    })
-    return
-    const lastUserMessageIndex = messages.reduce((lastIndex, message, index) => {
-      return message.role === 'user' ? index : lastIndex;
-    }, -1);
+  // const regenerateResponseHandler = async () => {
+  //   setMessages(prevMessages => {
+  //     let i;
+  //     for (i = prevMessages.length - 1; i >= 0; i--) {
+  //       if (prevMessages[i].role == 'user')
+  //         break
+  //     }
+  //     if (i >= 0)
+  //       return prevMessages.slice(0, i + 1);
+  //     else
+  //       return prevMessages;
+  //   })
+  //   setMessageIsStreaming(true);
+  //   regenerateMessageApi(currentConvId).then((resp) => {
+  //     setMessages(prevMessages => [...prevMessages, ...resp])
+  //     setMessageIsStreaming(false)
+  //   })
+  //   return
+  //   const lastUserMessageIndex = messages.reduce((lastIndex, message, index) => {
+  //     return message.role === 'user' ? index : lastIndex;
+  //   }, -1);
 
-    if (lastUserMessageIndex === -1) {
-      return;
-    } else {
-      setResubmitLastMessage(true);
-      handleSendMessage(undefined, messages.length - lastUserMessageIndex - 1);
-    }
-  };
+  //   if (lastUserMessageIndex === -1) {
+  //     return;
+  //   } else {
+  //     setResubmitLastMessage(true);
+  //     handleSendMessage(undefined, messages.length - lastUserMessageIndex - 1);
+  //   }
+  // };
 
 
   useEffect(() => {

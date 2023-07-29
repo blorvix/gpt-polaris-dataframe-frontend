@@ -1,7 +1,7 @@
 import MessageBoard from "./MessageBoard";
 import Input from "./Input";
 import { useEffect, useState, useContext, useCallback } from "react";
-import { Message, WaitingStates, ProgressStep, DataSet, Question, UploadedFileHowto } from "../../../../services/types";
+import { Message__, WaitingStates, ProgressStep, DataSet, Question, UploadedFileHowto } from "#/types/chat"
 import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi, getConversationApi, saveDataFilesApi, askCleanupApi, performCleanupApi, getVizHelpApi } from "../../../../services/requests";
 import { Button } from '@mui/material'
 import './ChatArea.css'
@@ -13,7 +13,7 @@ const ChatArea = () => {
   const { currentConvId } = useContext(UserContext) as UserContextType;
 
   const [waitingForSystem, setWaitingForSystem] = useState<WaitingStates>(WaitingStates.Idle);
-  const [messages, setMessages] = useState<Array<Message>>([]);
+  const [messages, setMessages] = useState<Array<Message__>>([]);
   const [dataSets, setDataSets] = useState<DataSet[]>([]);
   const [currentDatasetIndex, setCurrentDatasetIndex] = useState<number>(-1);
   const [_, setDataModalOpen] = useState<boolean>(false);
@@ -29,7 +29,7 @@ const ChatArea = () => {
   const startUpload = () => setWaitingForSystem(WaitingStates.UploadingFiles);
   const completeUpload = () => setWaitingForSystem(WaitingStates.Idle);
 
-  const addMessage = (message: Message) => {
+  const addMessage = (message: Message__) => {
     setMessages(messages => [
       ...messages,
       message
@@ -281,7 +281,7 @@ const ChatArea = () => {
       />
       {questions.length > 0 && (
         <div className="question-buttons">
-          {questions[0].options.map((option, index) => (
+          {questions[0].options.map((option, index: number) => (
             <Button key={index} variant={index == 0 ? "contained" : 'outlined'} onClick={() => questionAnswered(option)}>{option.text}</Button>
           ))}
           {/* <Button variant="contained" onClick={yesButtonClicked}>Yes</Button>

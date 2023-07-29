@@ -1,4 +1,4 @@
-import { parseOpenAIStreamData } from '@/utils/services/openai/parser';
+import { parseOpenAIStreamData } from '#/utils/services/openai/parser';
 
 /**
  * Creates a TransformStream that decodes incoming chunks of data, parses them using the OpenAI parser,

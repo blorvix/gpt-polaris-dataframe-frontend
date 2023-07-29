@@ -1,4 +1,4 @@
-import openApiSpec from './openapi.json';
+// import openApiSpec from './openapi.json';
 
 export const FUNCTIONS: Array<any> = [
     {

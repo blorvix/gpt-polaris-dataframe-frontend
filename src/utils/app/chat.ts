@@ -1,4 +1,4 @@
-import { Chat } from '@/types/chat';
+import { Chat } from '#/types/chat';
 
 /**
  * Updates a conversation in the list of all conversations and saves it to local storage.

@@ -1,4 +1,4 @@
-import { OpenAIBaseModel, Model } from "@/constants/openai"
+import { OpenAIBaseModel, Model } from "#/constants/openai"
 
 export const baseModelToSVG = {
   [OpenAIBaseModel.GPT4]: (

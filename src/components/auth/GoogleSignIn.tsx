@@ -28,9 +28,11 @@ const GoogleSignin = () => {
         const initializeGsi = () => {
             // Typescript will complain about window.google
             // Add types to your `react-app-env.d.ts` or //@ts-ignore it.
+            // @ts-ignore
             if (!window.google || gsiScriptLoaded) return
 
             setGsiScriptLoaded(true)
+            // @ts-ignore
             window.google.accounts.id.initialize({
                 client_id: GOOGLE_CLIENT_ID,
                 callback: handleGoogleSignIn,
@@ -46,6 +48,7 @@ const GoogleSignin = () => {
 
         return () => {
             // Cleanup function that runs when component unmounts
+            // @ts-ignore
             window.google?.accounts.id.cancel()
             document.getElementById("google-client-script")?.remove()
         }

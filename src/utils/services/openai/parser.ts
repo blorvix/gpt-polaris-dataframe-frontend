@@ -3,8 +3,8 @@
  * @param data The data received from the OpenAI stream.
  * @returns A string representation of the parsed data.
  */
-import { components } from "@/types/openai";
-import { escapeJsonString } from "@/utils/util";
+import { components } from "#/types/openai";
+import { escapeJsonString } from "#/utils/util";
 
 type StreamResponse = components['schemas']['CreateChatCompletionStreamResponse'];
 
