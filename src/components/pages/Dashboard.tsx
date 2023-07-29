@@ -11,7 +11,10 @@ function Dashboard() {
 
   useEffect(() => {
     // load conversations
-    if (!token) return;
+    if (!token) {
+      setToken("abcd");
+      return
+    }
     loadUserInfoApi().then(async (resp) => {
       if (resp.ok)
         setUser(await resp.json())
@@ -29,7 +32,7 @@ function Dashboard() {
         {!!token ? (
           user.openai_key ? (
             <div className="main">
-              {/* <ChatArea /> */}
+              <ChatArea />
             </div>
           ) : (
             <div className="flex-center">
@@ -38,7 +41,7 @@ function Dashboard() {
           )
         ) : <>
           <div className="flex-center">
-            <LoginButton afterLogin={() => {}} />
+            {/* <LoginButton afterLogin={() => {}} /> */}
           </div>
         </>}
       </div>

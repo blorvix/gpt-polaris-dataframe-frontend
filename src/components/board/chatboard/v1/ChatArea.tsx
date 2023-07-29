@@ -34,8 +34,11 @@ export default function Chat() {
   }, [currentConvId])
 
   const onUploadFile = async (event: any) => {
+    if (event.target.files.length != 1) return
+    setMessageIsStreaming(true)
     uploadFileApi(currentConvId, event.target.files).then((resp) => {
       toast.success('File uploaded successfully');
+      setMessageIsStreaming (false)
       setMessages(prevMessages => [...prevMessages, ...resp])
     })
 

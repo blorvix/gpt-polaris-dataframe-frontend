@@ -136,8 +136,9 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
         </button>
 
         <div className=" mt-[-2px] w-full">
-          {content && (
-            checkContent(content) ?
+          {/* {content && (
+            checkContent(content) ? */}
+            {message.function_call && (
               <CollapsibleSection title="Function call" isStreaming={isStreaming} isCurrentMessage={isCurrentMessage} >
                 {/* <div className='bg-gray-400 h-5 pl-2 text-black text-sm text-left mr-7'>content</div> */}
                 <MemoizedReactMarkdown
@@ -159,6 +160,8 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
                       }
 
                       const match = /language-(\w+)/.exec(className || '')
+                      // const match = 'python'
+                      // console.log(match)
 
                       if (inline) {
                         return (
@@ -183,11 +186,12 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
                     }
                   }}
                 >
-                  {content}
+                  {message.function_call.arguments}
 
                 </MemoizedReactMarkdown >
               </CollapsibleSection>
-              :
+            )}
+            {content && (
               <MemoizedReactMarkdown
                 className="dark:text-slate-200 prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
                 remarkPlugins={[remarkGfm, remarkMath]}
