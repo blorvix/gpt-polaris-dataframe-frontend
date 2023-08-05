@@ -70,7 +70,7 @@ export const loadMessagesApi = (conv_id: number) => {
   return getJson(`/conversations/${conv_id}/messages`);
 }
 
-export const uploadFileApi = (conv_id: number, files: any) => {
+export const uploadFileApi__ = (conv_id: number, files: any) => {
   const formData = new FormData();
   for (const file of files)
     formData.append("files[]", file);
@@ -119,4 +119,31 @@ export const askCleanupApi = (conv_id: number, dataset_id: number, ask: string) 
 
 export const performCleanupApi = (conv_id: number, dataset_id: number, answers: string[]) => {
   return postJson(`/conversations/${conv_id}/cleanup/${dataset_id}/perform`, {answers});
+}
+
+export const loadDatasetsApi = () => {
+  return getJson(`/datasets/`);
+}
+
+export const uploadDatafileApi = (dataset_id: number, file: File, possible: number[]) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append('possible', possible.join(','))
+  return postFormJson(`/datasets/${dataset_id}/upload`, formData);
+}
+
+export const overwriteDatafileApi = (datafile_id: number, dataset_id: number, decision: string) => {
+  return postJson(`/datasets/${dataset_id}/overwrite/${datafile_id}`, { decision })
+}
+
+export const createAnotherDatasetApi = (datafile_id: number, create: boolean) => {
+  return postJson(`/datasets/create_another_dataset`, {datafile: datafile_id, create: create ? '1' : '0'})
+}
+
+export const getDatafilesApi = (dataset_id: number) => {
+  return getJson(`/datasets/${dataset_id}/datafiles`)
+}
+
+export const getDatafileFirstRowsApi = (datafile_id: number) => {
+  return getJson(`/datasets/datafiles/${datafile_id}/first_rows`)
 }

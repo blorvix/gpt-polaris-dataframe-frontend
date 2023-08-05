@@ -1,8 +1,8 @@
 import MessageBoard from "./MessageBoard";
 import Input from "./Input";
 import { useEffect, useState, useContext, useCallback } from "react";
-import { Message__, WaitingStates, ProgressStep, DataSet, Question, UploadedFileHowto } from "#/types/chat"
-import { sendMessageApi, uploadFileApi, loadMessagesApi, getDatasetSummaryApi, getConversationApi, saveDataFilesApi, askCleanupApi, performCleanupApi, getVizHelpApi } from "../../../../services/requests";
+import { Message__, WaitingStates, ProgressStep, DataSet__, Question, UploadedFileHowto } from "#/types/chat"
+import { sendMessageApi, uploadFileApi__, loadMessagesApi, getDatasetSummaryApi, getConversationApi, saveDataFilesApi, askCleanupApi, performCleanupApi, getVizHelpApi } from "../../../../services/requests";
 import { Button } from '@mui/material'
 import './ChatArea.css'
 import { UserContext, UserContextType } from "../../../../services/context";
@@ -14,7 +14,7 @@ const ChatArea = () => {
 
   const [waitingForSystem, setWaitingForSystem] = useState<WaitingStates>(WaitingStates.Idle);
   const [messages, setMessages] = useState<Array<Message__>>([]);
-  const [dataSets, setDataSets] = useState<DataSet[]>([]);
+  const [dataSets, setDataSets] = useState<DataSet__[]>([]);
   const [currentDatasetIndex, setCurrentDatasetIndex] = useState<number>(-1);
   const [_, setDataModalOpen] = useState<boolean>(false);
 
@@ -73,7 +73,7 @@ const ChatArea = () => {
 
     startUpload()
 
-    uploadFileApi(currentConvId, files).then(uploadedFiles => {
+    uploadFileApi__(currentConvId, files).then(uploadedFiles => {
       completeUpload()
 
       setUploadedFilesCount(uploadedFiles.length)

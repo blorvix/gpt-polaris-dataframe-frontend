@@ -1,13 +1,14 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import "./Dashboard.css";
 import Sidebar from "../sidebar/Sidebar";
 import { UserContext, UserContextType } from "../../services/context";
 import { loadUserInfoApi } from "../../services/requests";
 import ChatArea from "../board/chatboard/v1/ChatArea";
 import GoogleSignIn from "#/components/auth/GoogleSignIn"
+import DatasetsView from "../board/datasets/DatasetsView";
 
 function Dashboard() {
-  const {token, setToken, user, setUser} = useContext(UserContext) as UserContextType;
+  const {token, setToken, user, setUser, currentConvId} = useContext(UserContext) as UserContextType;
 
   useEffect(() => {
     // load conversations
@@ -28,11 +29,17 @@ function Dashboard() {
   return (
     <>
       <div className="app">
-        <Sidebar/>
+        <Sidebar />
         {!!token ? (
           user.openai_key ? (
             <div className="main">
-              <ChatArea />
+              {currentConvId < 0 ? (
+                <DatasetsView />
+              ) : currentConvId == 0 ? (
+                <></>
+              ) : (
+                <ChatArea />
+              )}
             </div>
           ) : (
             <div className="flex-center">

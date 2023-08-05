@@ -24,7 +24,7 @@ const router = createBrowserRouter([
 const App = () => {
   const [token, setToken] = useLocalStorage<string>("token", "");
   const [user, setUser] = useState<User>({openai_key: "", openai_model: Config.MODELS[0].name});
-  const [currentConvId, setCurrentConvId] = useState<number>(0);
+  const [currentConvId, setCurrentConvId] = useState<number>(0); // -1 means datasets window is displayed
 
   useEffect(() => {
   }, [])

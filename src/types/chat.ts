@@ -35,7 +35,7 @@ export type Message__ = {
     type: string;
 };
 
-export type DataSet = {
+export type DataSet__ = {
     id: number;
     name: string;
     progress_step: ProgressStep;
@@ -77,3 +77,7 @@ export type Question = {
     }[]
 }
 
+export type DataSet = {
+    id: number;
+    name: string;
+}

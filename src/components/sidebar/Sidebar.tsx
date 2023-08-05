@@ -1,13 +1,15 @@
 import AssistantIcon from '@mui/icons-material/Assistant';
 import "./Sidebar.css";
-import { UserContext, UserContextType } from '../../services/context';
+import { UserContext, UserContextType } from '#/services/context';
 import { useContext } from 'react';
 
 import ConversationList from './ConversationList';
 import Settings from './Settings';
+import DatasetsButton from './DatasetsButton';
+import { Divider } from '@mui/material';
 
 export default function Sidebar() {
-  const { token } = useContext(UserContext) as UserContextType;
+  const { token, setCurrentConvId } = useContext(UserContext) as UserContextType;
 
   return (
     <>
@@ -17,6 +19,8 @@ export default function Sidebar() {
         </div>
         {!!token && (
           <>
+            <DatasetsButton onClick={() => setCurrentConvId(-1)} />
+            <Divider light={true} />
             <ConversationList />
             <Settings />
           </>

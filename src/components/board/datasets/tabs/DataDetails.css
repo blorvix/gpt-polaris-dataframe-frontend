@@ -1,0 +1,8 @@
+.data-details {
+    display: flex;
+    gap: 1em;
+}
+
+.data-details > * {
+    flex: 1;
+}
