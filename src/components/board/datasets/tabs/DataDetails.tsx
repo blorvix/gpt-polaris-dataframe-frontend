@@ -10,7 +10,6 @@ const DataDetails = (props: {dataset_id: number}) => {
         <>
             <div className='data-details'>
                 <DatafilesList dataset_id={props.dataset_id} currentDatafileId={currentDatafileId} setCurrentDatafileId={setCurrentDatafileId} />
-                <FirstRowsData datafile_id={currentDatafileId} />
             </div>
         </>
     )

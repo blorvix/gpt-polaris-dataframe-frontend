@@ -16,7 +16,7 @@ const SelectDataset = (props: {datasets: DataSet[], currentId: number, setCurren
                     <em></em>
                 </MenuItem>
                 {props.datasets.map(dataset => (
-                    <MenuItem value={dataset.id}>{dataset.name}</MenuItem>
+                    <MenuItem key={dataset.id} value={dataset.id}>{dataset.name}</MenuItem>
                 ))}
             </Select>
         </FormControl>

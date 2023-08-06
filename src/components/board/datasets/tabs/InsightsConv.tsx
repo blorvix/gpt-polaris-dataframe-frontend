@@ -1,6 +1,18 @@
+import { useState } from "react";
+
 const InsightsConv = (props: {dataset_id: number}) => {
+    const [conversationStarted, setConversationStarted] = useState<boolean>(false)
+
     return (
-        <>Insights Conv</>
+        <>
+            {conversationStarted ? (
+                <></>
+            ) : (
+                <div className="start-conv-click">
+                    Click me to get insights of the dataset.
+                </div>
+            )}
+        </>
     )
 }
 

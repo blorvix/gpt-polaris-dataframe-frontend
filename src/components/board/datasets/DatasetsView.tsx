@@ -38,7 +38,6 @@ const DatasetsView = () => {
         setFilesToUpload([])
         setUpdatedDatasets([])
         setQuestionDlgOpen(false)
-        setCurrentDatasetId(0)
         loadDatasetsApi().then(data => {
             setDatasets(data)
             let i;
@@ -52,7 +51,8 @@ const DatasetsView = () => {
                 } else {
                     setCurrentDatasetId(data[0].id)
                 }
-            }
+            } else
+                setCurrentDatasetId(currentDatasetId)
         })
     }
 
