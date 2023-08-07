@@ -6,6 +6,7 @@ import { loadUserInfoApi } from "../../services/requests";
 import ChatArea from "../board/chatboard/v1/ChatArea";
 import GoogleSignIn from "#/components/auth/GoogleSignIn"
 import DatasetsView from "../board/datasets/DatasetsView";
+import NavBar from "../board/chatboard/v1/NavBar";
 
 function Dashboard() {
   const {token, setToken, user, setUser, currentConvId} = useContext(UserContext) as UserContextType;
@@ -38,7 +39,12 @@ function Dashboard() {
               ) : currentConvId == 0 ? (
                 <></>
               ) : (
-                <ChatArea convId={currentConvId} />
+                <>
+                  <NavBar onDashboardClick={() => {}} />
+                  <div>
+                    <ChatArea convId={currentConvId} />
+                  </div>
+                </>
               )}
             </div>
           ) : (

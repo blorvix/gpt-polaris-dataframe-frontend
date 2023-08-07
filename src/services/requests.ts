@@ -155,3 +155,11 @@ export const getHelpConversationMessagesApi = (dataset_id: number, help_type: st
 export const createHelpConversationMessagesApi = (dataset_id: number, help_type: string) => {
   return postJson(`/datasets/${dataset_id}/help/${help_type}`)
 }
+
+export const getConversationDatasetsApi = (conv_id: number) => {
+  return getJson(`/conversations/${conv_id}/datasets`)
+}
+
+export const setConversationDatasetsApi = (conv_id: number, datasets: number[]) => {
+  return getJson(`/conversations/${conv_id}/datasets`, {datasets})
+}

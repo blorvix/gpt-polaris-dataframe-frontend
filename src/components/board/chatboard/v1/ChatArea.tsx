@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { UploadedFile } from './UploadedFile'
 import { UserContext, UserContextType } from "../../../../services/context";
 import { loadMessagesApi, uploadFileApi__, sendMessageApi } from '#/services/requests';
+import './ChatArea.css'
 
 
 export default function Chat(props: {convId: number}) {
@@ -365,7 +366,7 @@ export default function Chat(props: {convId: number}) {
   }, [messages, textareaRef.current]);
 
   return (
-    <div className="relative h-full mx-0">
+    <div className="relative h-full mx-0 chatarea">
       <div className="flex flex-col h-full mx-0">
         <div className={`top-0 left-0 w-full border-transparent dark:border-white/20 dark:via-[#343541] dark:to-[#343541] 
         ${conversationStarted ? 'pt-0 md:pt-0' : 'pt-8 md:pt-6'}`} style={{overflowY: 'auto'}}>
