@@ -161,5 +161,5 @@ export const getConversationDatasetsApi = (conv_id: number) => {
 }
 
 export const setConversationDatasetsApi = (conv_id: number, datasets: number[]) => {
-  return getJson(`/conversations/${conv_id}/datasets`, {datasets})
+  return postJson(`/conversations/${conv_id}/datasets`, {datasets})
 }

@@ -18,6 +18,7 @@
 
 .main > :last-child {
   flex: 1;
+  overflow: auto;
 }
 
 .flex-center {
