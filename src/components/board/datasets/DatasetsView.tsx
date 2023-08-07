@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
-import { UserContext, UserContextType } from '#/services/context';
+import { useEffect, useState } from 'react';
 import { Button } from "@mui/material";
 import { DataSet } from '#/types/chat';
 import { createAnotherDatasetApi, loadDatasetsApi, overwriteDatafileApi, uploadDatafileApi } from '#/services/requests';
@@ -65,7 +64,7 @@ const DatasetsView = () => {
     }, [currentDatasetId])
 
     const overwriteDatafile = (datafile_id: number, dataset_id: number, decision: string) => {
-        overwriteDatafileApi(datafile_id, dataset_id, decision).then(resp => {
+        overwriteDatafileApi(datafile_id, dataset_id, decision).then(_ => {
             uploadSuccess(dataset_id)
         })
     }

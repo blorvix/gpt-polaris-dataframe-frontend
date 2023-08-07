@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useRef, MutableRefObject, useCallback } from 'react';
+import { useState, useEffect, useRef, MutableRefObject, useCallback } from 'react';
 import { Model, SYSTEM_PROMPT, SYSTEM_PROMPT_CODE_INTERPRETER } from '#/constants/openai';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import ChatMessage from './ChatMessage'
@@ -6,7 +6,6 @@ import { Message } from '#/utils/services/openai/openai-stream';
 import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { UploadedFile } from './UploadedFile'
-import { UserContext, UserContextType } from "../../../../services/context";
 import { loadMessagesApi, uploadFileApi__, sendMessageApi } from '#/services/requests';
 import './ChatArea.css'
 
