@@ -12,7 +12,7 @@ const SelectDataset = (props: {datasets: DataSet[], currentId: number, setCurren
                 label="Dataset"
                 onChange={e => props.setCurrentId(parseInt(e.target.value))}
             >
-                <MenuItem value="">
+                <MenuItem value="0">
                     <em></em>
                 </MenuItem>
                 {props.datasets.map(dataset => (

@@ -49,7 +49,7 @@ const MultipleSelectDataset = (props: { datasets: DataSet[], selectedDatasets: n
                 }}
                 MenuProps={MenuProps}
             >
-                <MenuItem value="">
+                <MenuItem value="0">
                     <em></em>
                 </MenuItem>
                 {props.datasets.map(dataset => (
