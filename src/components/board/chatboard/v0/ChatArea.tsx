@@ -9,8 +9,8 @@ import { UserContext, UserContextType } from "../../../../services/context";
 import NavBar from "./NavBar";
 // import DataModal from "./DataModal";
 
-const ChatArea = () => {
-  const { currentConvId } = useContext(UserContext) as UserContextType;
+const ChatArea = (props: {convId: number}) => {
+  const { convId } = props
 
   const [waitingForSystem, setWaitingForSystem] = useState<WaitingStates>(WaitingStates.Idle);
   const [messages, setMessages] = useState<Array<Message__>>([]);
@@ -35,14 +35,14 @@ const ChatArea = () => {
       message
     ])
     // if (save) {
-    //   forceAddMessageApi(currentConvId, message.role, message.text).then(() => {
+    //   forceAddMessageApi(convId, message.role, message.text).then(() => {
     //     if (callback) callback()
     //   })
     // }
   }
 
   const sendMessage = (message: string) => {
-    if (!message.length || !currentConvId) return;
+    if (!message.length || !convId) return;
 
     addMessage({
       text: message,
@@ -52,7 +52,7 @@ const ChatArea = () => {
 
     setWaitingForSystem(WaitingStates.GeneratingResponse)
 
-    sendMessageApi(currentConvId, message).then(message => {
+    sendMessageApi(convId, message).then(message => {
       addMessage(message)
       setWaitingForSystem(WaitingStates.Idle);
     })
@@ -69,11 +69,11 @@ const ChatArea = () => {
   }
 
   const uploadFiles = async (files: any) => {
-    if (!files.length || !currentConvId) return;
+    if (!files.length || !convId) return;
 
     startUpload()
 
-    uploadFileApi__(currentConvId, files).then(uploadedFiles => {
+    uploadFileApi__(convId, files).then(uploadedFiles => {
       completeUpload()
 
       setUploadedFilesCount(uploadedFiles.length)
@@ -99,19 +99,19 @@ const ChatArea = () => {
   }
 
   const loadConversation = useCallback(() => {
-    getConversationApi(currentConvId).then(data => {
+    getConversationApi(convId).then(data => {
       setDataSets(data.datasets)
       setCurrentDatasetIndex(data.current_file)
     })
-  }, [currentConvId, setDataSets, setCurrentDatasetIndex])
+  }, [convId, setDataSets, setCurrentDatasetIndex])
 
   const loadMessages = useCallback(() => {
-    loadMessagesApi(currentConvId).then(messages => setMessages(messages))
-  }, [currentConvId, setMessages])
+    loadMessagesApi(convId).then(messages => setMessages(messages))
+  }, [convId, setMessages])
 
   useEffect(() => {
     if (uploadedFilesCount > 0 && uploadedFilesCount == uploadedFileHowtos.length) {
-      saveDataFilesApi(currentConvId, uploadedFileHowtos).then(() => {
+      saveDataFilesApi(convId, uploadedFileHowtos).then(() => {
         loadConversation()
         loadMessages()
       })
@@ -125,7 +125,7 @@ const ChatArea = () => {
   useEffect(() => {
     if (cleanupQuestionsCount > 0 && cleanupAnswers.length == 2 * cleanupQuestionsCount) {
       setWaitingForSystem(WaitingStates.GeneratingResponse)
-      performCleanupApi(currentConvId, dataSets[currentDatasetIndex].id, cleanupAnswers).then(message => {
+      performCleanupApi(convId, dataSets[currentDatasetIndex].id, cleanupAnswers).then(message => {
         setWaitingForSystem(WaitingStates.Idle)
         addMessage(message)
         gotoNextDatasetProgress()
@@ -134,7 +134,7 @@ const ChatArea = () => {
   }, [cleanupAnswers])
 
   const askCleanup = (ask: string) => {
-    const request = askCleanupApi(currentConvId, dataSets[currentDatasetIndex].id, ask)
+    const request = askCleanupApi(convId, dataSets[currentDatasetIndex].id, ask)
     if (ask == 'yes') {
       setWaitingForSystem(WaitingStates.GeneratingResponse)
       request.then((questions) => {
@@ -188,7 +188,7 @@ const ChatArea = () => {
   }
 
   const getSummary = (ask: string) => {
-    const request = getDatasetSummaryApi(currentConvId, dataSets[currentDatasetIndex].id, ask)
+    const request = getDatasetSummaryApi(convId, dataSets[currentDatasetIndex].id, ask)
     if (ask == 'yes') {
       setWaitingForSystem(WaitingStates.GeneratingResponse)
       request.then((message) => {
@@ -202,7 +202,7 @@ const ChatArea = () => {
   }
 
   const getVizHelp = (ask: string) => {
-    const request = getVizHelpApi(currentConvId, dataSets[currentDatasetIndex].id, ask)
+    const request = getVizHelpApi(convId, dataSets[currentDatasetIndex].id, ask)
     if (ask == 'yes') {
       setWaitingForSystem(WaitingStates.GeneratingResponse)
       request.then((message) => {
@@ -254,7 +254,7 @@ const ChatArea = () => {
   }
 
   useEffect(() => {
-    if (!currentConvId) return;
+    if (!convId) return;
 
     setDataModalOpen(false)
     setWaitingForSystem(WaitingStates.Idle)
@@ -269,7 +269,7 @@ const ChatArea = () => {
 
     loadMessages()
     loadConversation()
-  }, [currentConvId])
+  }, [convId])
 
   return (
     <div className="main">

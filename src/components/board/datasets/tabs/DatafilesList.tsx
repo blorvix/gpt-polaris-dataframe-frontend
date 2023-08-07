@@ -82,7 +82,7 @@ const DatafilesList = (props: { dataset_id: number, currentDatafileId: number, s
                 </TableHead>
                 <TableBody>
                     {datafiles.map((datafile, index) => (
-                        <Row index={index} row={datafile} />
+                        <Row index={index} row={datafile} key={index} />
                     ))}
                 </TableBody>
             </Table>

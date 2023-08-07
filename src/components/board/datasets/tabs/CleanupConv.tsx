@@ -1,6 +1,8 @@
+import HelpConv from "./HelpConv";
+
 const CleanupConv = (props: {dataset_id: number}) => {
     return (
-        <>Cleanup Conv</>
+        <HelpConv dataset_id={props.dataset_id} help_type="cleanup" help_text="Click me to perform data cleanup." />
     )
 }
 

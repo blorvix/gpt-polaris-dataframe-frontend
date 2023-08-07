@@ -10,8 +10,8 @@ import { UserContext, UserContextType } from "../../../../services/context";
 import { loadMessagesApi, uploadFileApi__, sendMessageApi } from '#/services/requests';
 
 
-export default function Chat() {
-  const { currentConvId } = useContext(UserContext) as UserContextType;
+export default function Chat(props: {convId: number}) {
+  const { convId } = props;
 
   // @ts-ignore
   const [selectedModel, setSelectedModel] = useState(Model.GPT3_5_CODE_INTERPRETER_16K);
@@ -32,16 +32,16 @@ export default function Chat() {
   const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    loadMessagesApi(currentConvId).then(messages => setMessages(messages))
+    loadMessagesApi(convId).then(messages => setMessages(messages))
     setNewMessage('')
     setIsTyping(false)
     setMessageIsStreaming(false)
-  }, [currentConvId])
+  }, [convId])
 
   const onUploadFile = async (event: any) => {
     if (event.target.files.length != 1) return
     setMessageIsStreaming(true)
-    uploadFileApi__(currentConvId, event.target.files).then((resp) => {
+    uploadFileApi__(convId, event.target.files).then((resp) => {
       toast.success('File uploaded successfully');
       setMessageIsStreaming(false)
       setMessages(prevMessages => [...prevMessages, ...resp])
@@ -201,7 +201,7 @@ export default function Chat() {
       setNewMessage('')
       setMessages(prevMessages => [...prevMessages, newUserMessage])
 
-      sendMessageApi(currentConvId, newUserMessage?.content || '').then((resp) => {
+      sendMessageApi(convId, newUserMessage?.content || '').then((resp) => {
         setMessages(prevMessages => [...prevMessages, ...resp])
         setMessageIsStreaming(false)
       })
@@ -316,7 +316,7 @@ export default function Chat() {
   //       return prevMessages;
   //   })
   //   setMessageIsStreaming(true);
-  //   regenerateMessageApi(currentConvId).then((resp) => {
+  //   regenerateMessageApi(convId).then((resp) => {
   //     setMessages(prevMessages => [...prevMessages, ...resp])
   //     setMessageIsStreaming(false)
   //   })
@@ -365,12 +365,12 @@ export default function Chat() {
   }, [messages, textareaRef.current]);
 
   return (
-    <div className="relative h-screen mx-0">
-      <div className="flex flex-col h-screen mx-0">
+    <div className="relative h-full mx-0">
+      <div className="flex flex-col h-full mx-0">
         <div className={`top-0 left-0 w-full border-transparent dark:border-white/20 dark:via-[#343541] dark:to-[#343541] 
         ${conversationStarted ? 'pt-0 md:pt-0' : 'pt-8 md:pt-6'}`} style={{overflowY: 'auto'}}>
           <div className="mx-2 flex flex-row gap-3 last:mb-2 md:mx-4 md:mt-[52px] md:last:mb-6 lg:mx-auto" style={{marginTop: 0}}>
-            <div className="flex-1 overflow-auto mt-12 mb-40 bg-transparent">
+            <div className="flex-1 overflow-auto mb-40 bg-transparent">
               {messages.map((message, index) => {
                 const lastMessage = index > 0 ? messages[index - 1] : 'na';
                 return (

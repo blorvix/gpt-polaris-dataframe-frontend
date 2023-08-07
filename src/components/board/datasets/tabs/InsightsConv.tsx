@@ -1,18 +1,8 @@
-import { useState } from "react";
+import HelpConv from "./HelpConv";
 
 const InsightsConv = (props: {dataset_id: number}) => {
-    const [conversationStarted, setConversationStarted] = useState<boolean>(false)
-
     return (
-        <>
-            {conversationStarted ? (
-                <></>
-            ) : (
-                <div className="start-conv-click">
-                    Click me to get insights of the dataset.
-                </div>
-            )}
-        </>
+        <HelpConv dataset_id={props.dataset_id} help_type="insights" help_text="Click me to get insights of the dataset." />
     )
 }
 

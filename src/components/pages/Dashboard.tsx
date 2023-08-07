@@ -38,7 +38,7 @@ function Dashboard() {
               ) : currentConvId == 0 ? (
                 <></>
               ) : (
-                <ChatArea />
+                <ChatArea convId={currentConvId} />
               )}
             </div>
           ) : (

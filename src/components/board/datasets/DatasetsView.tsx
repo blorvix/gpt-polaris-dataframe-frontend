@@ -165,9 +165,9 @@ const DatasetsView = () => {
                              </TabList>
                            </Box>
                            <TabPanel value="1"><DataDetails dataset_id={currentDatasetId}/></TabPanel>
-                           <TabPanel value="2"><InsightsConv dataset_id={currentDatasetId}/></TabPanel>
-                           <TabPanel value="3"><CleanupConv dataset_id={currentDatasetId}/></TabPanel>
-                           <TabPanel value="3"><VisualizationConv dataset_id={currentDatasetId}/></TabPanel>
+                           <TabPanel value="2" sx={{padding: 0}}><InsightsConv dataset_id={currentDatasetId}/></TabPanel>
+                           <TabPanel value="3" sx={{padding: 0}}><CleanupConv dataset_id={currentDatasetId}/></TabPanel>
+                           <TabPanel value="4" sx={{padding: 0}}><VisualizationConv dataset_id={currentDatasetId}/></TabPanel>
                          </TabContext>
                        </Box>
                     )}

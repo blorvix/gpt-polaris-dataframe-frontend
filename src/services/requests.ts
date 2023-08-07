@@ -147,3 +147,11 @@ export const getDatafilesApi = (dataset_id: number) => {
 export const getDatafileFirstRowsApi = (datafile_id: number) => {
   return getJson(`/datasets/datafiles/${datafile_id}/first_rows`)
 }
+
+export const getHelpConversationMessagesApi = (dataset_id: number, help_type: string) => {
+  return getJson(`/datasets/${dataset_id}/help/${help_type}`)
+}
+
+export const createHelpConversationMessagesApi = (dataset_id: number, help_type: string) => {
+  return postJson(`/datasets/${dataset_id}/help/${help_type}`)
+}
