@@ -5,6 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+
 export type QuestionDialogDataType = {
     title: string;
     description: string;
@@ -12,6 +13,8 @@ export type QuestionDialogDataType = {
         name: string;
         action: () => void;
         focus?: boolean;
+        variant?: any;
+        color?: any;
     }[]
 }
 
@@ -19,7 +22,7 @@ const QuestionDialog = (props: { open: boolean, setOpen: any, data: QuestionDial
     return (
         <Dialog
             open={props.open}
-            onClose={() => props.setOpen(false)}
+            // onClose={() => props.setOpen(false)}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
@@ -35,7 +38,7 @@ const QuestionDialog = (props: { open: boolean, setOpen: any, data: QuestionDial
             </DialogContent>
             <DialogActions>
                 {props.data.buttons.map((button, index) => (
-                    <Button key={index} onClick={() => { props.setOpen(false); button.action() }} autoFocus={button.focus === true}>
+                    <Button key={index} onClick={() => { props.setOpen(false); button.action() }} autoFocus={button.focus === true} variant={button.variant} color={button.color}>
                         {button.name}
                     </Button>
                 ))}

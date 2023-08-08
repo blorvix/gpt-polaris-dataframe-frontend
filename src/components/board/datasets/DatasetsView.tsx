@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from "@mui/material";
 import { DataSet } from '#/types/chat';
-import { createAnotherDatasetApi, loadDatasetsApi, overwriteDatafileApi, uploadDatafileApi } from '#/services/requests';
+import { createAnotherDatasetApi, deleteDatasetApi, loadDatasetsApi, overwriteDatafileApi, uploadDatafileApi } from '#/services/requests';
 import './DatasetsView.css'
 import SelectDataset from './SelectDataset';
 import QuestionDialog, { QuestionDialogDataType } from '#/components/common/QuestionDialog';
@@ -20,6 +20,7 @@ import DataDetails from './tabs/DataDetails';
 const DatasetsView = () => {
     const [datasets, setDatasets] = useState<DataSet[]>([])
     const [currentDatasetId, setCurrentDatasetId] = useState<number>(0);
+    const [reloadCurrentDataset, setReloadCurrentDataset] = useState<boolean>(false);
     
     const [questionDlgOpen, setQuestionDlgOpen] = useState<boolean>(false);
     const [questionDlgData, setQuestionDlgData] = useState<QuestionDialogDataType>({
@@ -50,8 +51,9 @@ const DatasetsView = () => {
                 } else {
                     setCurrentDatasetId(data[0].id)
                 }
-            } else
-                setCurrentDatasetId(currentDatasetId)
+            } else {
+                setReloadCurrentDataset(!reloadCurrentDataset)
+            }
         })
     }
 
@@ -70,7 +72,6 @@ const DatasetsView = () => {
     }
     
     const createAnotherDataset = (datafile_id: number, create: boolean) => {
-        createAnotherDatasetApi(datafile_id, create)
         createAnotherDatasetApi(datafile_id, create).then(resp => {
             uploadSuccess(resp.dataset)
         })
@@ -104,13 +105,17 @@ const DatasetsView = () => {
                     description: resp.message,
                     buttons: [{
                         name: 'Overwrite',
-                        action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'overwrite') }
+                        action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'overwrite') },
+                        focus: true,
+                        variant: 'contained',
                     }, {
                         name: 'Rename',
-                        action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'rename') }
+                        action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'rename') },
+                        color: 'success'
                     }, {
                         name: 'Skip',
-                        action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'skip') }
+                        action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'skip') },
+                        color: 'inherit'
                     }]
                 })
                 setQuestionDlgOpen(true)
@@ -120,16 +125,43 @@ const DatasetsView = () => {
                     description: resp.message,
                     buttons: [{
                         name: 'Yes',
-                        action: () => { createAnotherDataset(resp.datafile_id, true) }
+                        action: () => { createAnotherDataset(resp.datafile_id, true) },
+                        focus: true,
+                        variant: 'contained',
                     }, {
                         name: 'Skip',
-                        action: () => { createAnotherDataset(resp.datafile_id, false) }
+                        action: () => { createAnotherDataset(resp.datafile_id, false) },
+                        color: 'inherit'
                     }]
                 })
                 setQuestionDlgOpen(true)
             }
         })
     }, [filesToUpload, updatedDatasets])
+
+    const onDeleteButtonClicked = () => {
+        setQuestionDlgData({
+            title: 'Confirm',
+            description: 'Do you really want to delete this dataset?',
+            buttons: [{
+                name: 'Yes',
+                action: () => {
+                    deleteDatasetApi(currentDatasetId).then(_ => {
+                        toast.success('Dataset is deleted successfully.')
+                        reloadDatasets()
+                    })
+                },
+                focus: true,
+                color: 'error',
+                variant: 'contained',
+            }, {
+                name: 'No',
+                action: () => {},
+                color: 'inherit'
+            }]
+        })
+        setQuestionDlgOpen(true)
+    }
 
     return (
         <div className='datasets-view-wrapper'>
@@ -147,7 +179,7 @@ const DatasetsView = () => {
                         <Button variant="contained" color="primary" onClick={() => document.getElementById('datasetFileUpload')?.click()}>
                             Upload a New File
                         </Button>
-                        <Button variant="contained" color="error" style={{marginLeft: '1em'}}>
+                        <Button variant="contained" color="error" style={{marginLeft: '1em'}} onClick={onDeleteButtonClicked}>
                             Delete
                         </Button>
                     </div>
@@ -164,7 +196,7 @@ const DatasetsView = () => {
                                <Tab label="Visualization Help" value="4" />
                              </TabList>
                            </Box>
-                           <TabPanel value="1"><DataDetails dataset_id={currentDatasetId}/></TabPanel>
+                           <TabPanel value="1"><DataDetails dataset_id={currentDatasetId} forceReload={reloadCurrentDataset}/></TabPanel>
                            <TabPanel value="2" sx={{padding: 0}}><InsightsConv dataset_id={currentDatasetId}/></TabPanel>
                            <TabPanel value="3" sx={{padding: 0}}><CleanupConv dataset_id={currentDatasetId}/></TabPanel>
                            <TabPanel value="4" sx={{padding: 0}}><VisualizationConv dataset_id={currentDatasetId}/></TabPanel>

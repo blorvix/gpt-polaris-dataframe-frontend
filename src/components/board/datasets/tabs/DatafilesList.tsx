@@ -58,7 +58,7 @@ const Row = (props: { index: number, row: Datafile }) => {
     );
 }
 
-const DatafilesList = (props: { dataset_id: number, currentDatafileId: number, setCurrentDatafileId: any }) => {
+const DatafilesList = (props: { dataset_id: number, currentDatafileId: number, setCurrentDatafileId: any, forceReload: boolean }) => {
     const [datafiles, setDatafiles] = useState<Datafile[]>([])
 
     useEffect(() => {
@@ -67,7 +67,7 @@ const DatafilesList = (props: { dataset_id: number, currentDatafileId: number, s
             if (resp.length > 0)
                 props.setCurrentDatafileId(resp[0].id)
         })
-    }, [props.dataset_id])
+    }, [props.dataset_id, props.forceReload])
 
     return (
         <TableContainer component={Paper} sx={{maxHeight: 'calc(100vh - 205px)'}}>
