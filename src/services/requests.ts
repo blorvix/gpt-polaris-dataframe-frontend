@@ -33,6 +33,15 @@ const _delete = (url: string, options: any = {}) =>
   fetch(`${Config.API_URL}/${removeSlash(url)}`, { ...getBaseConfig('delete'), ...options })
 const _deleteJson = (url: string, options: any = {}) => _delete(url, options).then(data => data.json())
 
+const put = (url: string, data: any = {}, options: any = {}) => {
+  return fetch(`${Config.API_URL}/${removeSlash(url)}`, {
+    ...getBaseConfig('put'),
+    ...options,
+    body: (data instanceof FormData) ? data : JSON.stringify(data)
+  })
+}
+const putJson = (url: string, data: any = {}, options: any = {}) => put(url, data, options).then(data => data.json())
+
 export const postForm = (url: string, data: any, options: any = {}) => {
   return fetch(`${Config.API_URL}/${removeSlash(url)}`, {
     ...getBaseConfig('post', true),
@@ -166,4 +175,8 @@ export const setConversationDatasetsApi = (conv_id: number, datasets: number[]) 
 
 export const deleteDatasetApi = (dataset_id: number) => {
   return _delete(`/datasets/${dataset_id}`)
+}
+
+export const updateDatasetNameApi = (dataset_id: number, name: string) => {
+  return putJson(`/datasets/${dataset_id}`, {name})
 }

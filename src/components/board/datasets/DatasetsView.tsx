@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from "@mui/material";
 import { DataSet } from '#/types/chat';
-import { createAnotherDatasetApi, deleteDatasetApi, loadDatasetsApi, overwriteDatafileApi, uploadDatafileApi } from '#/services/requests';
+import { createAnotherDatasetApi, deleteDatasetApi, loadDatasetsApi, overwriteDatafileApi, updateDatasetNameApi, uploadDatafileApi } from '#/services/requests';
 import './DatasetsView.css'
 import SelectDataset from './SelectDataset';
 import QuestionDialog, { QuestionDialogDataType } from '#/components/common/QuestionDialog';
@@ -16,6 +16,7 @@ import InsightsConv from './tabs/InsightsConv';
 import CleanupConv from './tabs/CleanupConv';
 import VisualizationConv from './tabs/VisualizationConv';
 import DataDetails from './tabs/DataDetails';
+import EditDatasetDlg from './EditDatasetDlg';
 
 const DatasetsView = () => {
     const [datasets, setDatasets] = useState<DataSet[]>([])
@@ -28,6 +29,9 @@ const DatasetsView = () => {
         description: '',
         buttons: []
     })
+
+    const [editDatasetDlgOpen, setEditDatasetDlgOpen] = useState<boolean>(false)
+    const [editDatasetName, setEditDatasetName] = useState<string>('')
 
     const [filesToUpload, setFilesToUpload] = useState<Array<any>>([]);
     const [updatedDatasets, setUpdatedDatasets] = useState<Array<number>>([])
@@ -61,10 +65,6 @@ const DatasetsView = () => {
         reloadDatasets()
     }, [])
 
-    useEffect(() => {
-
-    }, [currentDatasetId])
-
     const overwriteDatafile = (datafile_id: number, dataset_id: number, decision: string) => {
         overwriteDatafileApi(datafile_id, dataset_id, decision).then(_ => {
             uploadSuccess(dataset_id)
@@ -92,6 +92,17 @@ const DatasetsView = () => {
         }
     }
 
+    const findDatasetById = useCallback((dataset_id: number) => {
+        for (const dataset of datasets) {
+            if (dataset.id == dataset_id)
+                return dataset
+        }
+        return {
+            id: 0,
+            name: ''
+        }
+    }, [datasets])
+
     useEffect(() => {
         if (filesToUpload.length <= updatedDatasets.length) return
 
@@ -104,18 +115,18 @@ const DatasetsView = () => {
                     title: 'Same datafile exists',
                     description: resp.message,
                     buttons: [{
-                        name: 'Overwrite',
-                        action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'overwrite') },
-                        focus: true,
-                        variant: 'contained',
+                        name: 'Skip',
+                        action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'skip') },
+                        color: 'inherit'
                     }, {
                         name: 'Rename',
                         action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'rename') },
                         color: 'success'
                     }, {
-                        name: 'Skip',
-                        action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'skip') },
-                        color: 'inherit'
+                        name: 'Overwrite',
+                        action: () => { overwriteDatafile(resp.datafile_id, resp.dataset_id, 'overwrite') },
+                        focus: true,
+                        variant: 'contained',
                     }]
                 })
                 setQuestionDlgOpen(true)
@@ -124,14 +135,14 @@ const DatasetsView = () => {
                     title: 'Doesn\'t belong to current dataset',
                     description: resp.message,
                     buttons: [{
+                        name: 'Skip',
+                        action: () => { createAnotherDataset(resp.datafile_id, false) },
+                        color: 'inherit'
+                    }, {
                         name: 'Yes',
                         action: () => { createAnotherDataset(resp.datafile_id, true) },
                         focus: true,
                         variant: 'contained',
-                    }, {
-                        name: 'Skip',
-                        action: () => { createAnotherDataset(resp.datafile_id, false) },
-                        color: 'inherit'
                     }]
                 })
                 setQuestionDlgOpen(true)
@@ -139,11 +150,30 @@ const DatasetsView = () => {
         })
     }, [filesToUpload, updatedDatasets])
 
+    const onEditButtonClicked = () => {
+        setEditDatasetName(findDatasetById(currentDatasetId).name)
+        setEditDatasetDlgOpen(true)
+    }
+
+    const onUpdateDatasetName = async () => {
+        const resp = await updateDatasetNameApi(currentDatasetId, editDatasetName)
+        if (resp.success == 'yes') {
+            reloadDatasets()
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     const onDeleteButtonClicked = () => {
         setQuestionDlgData({
             title: 'Confirm',
             description: 'Do you really want to delete this dataset?',
             buttons: [{
+                name: 'No',
+                action: () => {},
+                color: 'inherit'
+            }, {
                 name: 'Yes',
                 action: () => {
                     deleteDatasetApi(currentDatasetId).then(_ => {
@@ -154,10 +184,6 @@ const DatasetsView = () => {
                 focus: true,
                 color: 'error',
                 variant: 'contained',
-            }, {
-                name: 'No',
-                action: () => {},
-                color: 'inherit'
             }]
         })
         setQuestionDlgOpen(true)
@@ -179,9 +205,16 @@ const DatasetsView = () => {
                         <Button variant="contained" color="primary" onClick={() => document.getElementById('datasetFileUpload')?.click()}>
                             Upload a New File
                         </Button>
-                        <Button variant="contained" color="error" style={{marginLeft: '1em'}} onClick={onDeleteButtonClicked}>
-                            Delete
-                        </Button>
+                        {currentDatasetId != 0 && (
+                            <>
+                                <Button variant="contained" color="success" style={{marginLeft: '1em'}} onClick={onEditButtonClicked}>
+                                    Edit
+                                </Button>
+                                <Button variant="contained" color="error" style={{marginLeft: '1em'}} onClick={onDeleteButtonClicked}>
+                                    Delete
+                                </Button>
+                            </>
+                        )}
                     </div>
                 </div>
                 <div className='dataset-details'>
@@ -212,6 +245,7 @@ const DatasetsView = () => {
                 </div>
             )}
 
+            <EditDatasetDlg open={editDatasetDlgOpen} setOpen={setEditDatasetDlgOpen} name={editDatasetName} setName={setEditDatasetName} onEditName={onUpdateDatasetName} />
             <QuestionDialog open={questionDlgOpen} setOpen={setQuestionDlgOpen} data={questionDlgData} />
         </div>
     )
