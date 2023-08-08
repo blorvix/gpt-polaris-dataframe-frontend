@@ -440,7 +440,7 @@ export default function Chat(props: {convId: number}) {
                     overflow: `${textareaRef.current && textareaRef.current.scrollHeight > 400 ? 'auto' : 'hidden'}`,
                     minHeight: '56px',
                     cursor: 'text',
-                    paddingLeft: `${selectedModel === Model.GPT3_5_CODE_INTERPRETER_16K || selectedModel === Model.GPT4_CODE_INTERPRETER ? '50px' : '30px'}`,
+                    paddingLeft: `16px`,
                     paddingRight: '34px',
 
                   }}
@@ -458,7 +458,7 @@ export default function Chat(props: {convId: number}) {
                   }} />
 
 
-                <input
+                {/* <input
                   type="file"
                   id="fileUpload"
                   className="hidden"
@@ -473,7 +473,7 @@ export default function Chat(props: {convId: number}) {
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                  </button>}
+                  </button>} */}
                 <button
                   type="submit"
                   className={`absolute right-3 bottom-3.5 p-1 rounded-md text-neutral-800 opacity-90 ${newMessage.length === 0 && !fileIsAttached ? 'bg-transparent text-neutral-800 opacity-60' : 'bg-fuchsia-500 text-neutral-100'} dark:bg-opacity-50 dark:text-neutral-100 dark:hover:text-neutral-900 duration-100 transition-all`}
