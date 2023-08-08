@@ -38,6 +38,7 @@ export default function Chat(props: {convId: number}) {
     setMessageIsStreaming(false)
   }, [convId])
 
+  // @ts-ignore
   const onUploadFile = async (event: any) => {
     if (event.target.files.length != 1) return
     setMessageIsStreaming(true)

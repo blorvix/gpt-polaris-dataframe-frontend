@@ -1,6 +1,6 @@
 // let resolvedWebAddress = import.meta.env.VITE_WEB_ADDRESS ? import.meta.env.VITE_WEB_ADDRESS : "";
 
-const isDev = true;
+const isDev = false;
 
 const Config = {
     API_URL: isDev ? "http://localhost:8000/api" : '/api',

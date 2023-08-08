@@ -129,7 +129,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
             <Avatar role={message.role} lastMessageRole={lastMessage.role} />}
         </div>
 
-        <button onClick={copyToClipboard} className="w-5 h-5 hover:text-gray-200 text-gray-300 absolute right-1 top-1 transition-all duration-200" style={{ opacity: hoveredMessageIndex === messageIndex ? 1 : 0, visibility: hoveredMessageIndex === messageIndex ? 'visible' : 'hidden' }}>
+        <button onClick={copyToClipboard} className="w-5 h-5 button-transparent hover:text-gray-200 text-gray-300 absolute right-1 top-1 transition-all duration-200" style={{ opacity: hoveredMessageIndex === messageIndex ? 1 : 0, visibility: hoveredMessageIndex === messageIndex ? 'visible' : 'hidden' }}>
           {copySuccess ? (
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-green-500">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />

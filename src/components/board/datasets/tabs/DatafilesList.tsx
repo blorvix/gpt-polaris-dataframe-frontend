@@ -141,7 +141,6 @@ const Row = (props: { index: number, row: Datafile, afterDelete: any }) => {
 
 const DatafilesList = (props: { dataset_id: number, forceReload: boolean }) => {
     const [datafiles, setDatafiles] = useState<Datafile[]>([])
-    const confirm = useConfirm()
 
     const reload = () => {
         getDatafilesApi(props.dataset_id).then(resp => {
