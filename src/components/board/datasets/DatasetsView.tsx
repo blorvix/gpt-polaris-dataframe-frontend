@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from "@mui/material";
 import { DataSet } from '#/types/chat';
 import { createAnotherDatasetApi, deleteDatasetApi, loadDatasetsApi, overwriteDatafileApi, updateDatasetNameApi, uploadDatafileApi } from '#/services/requests';
@@ -17,8 +17,11 @@ import CleanupConv from './tabs/CleanupConv';
 import VisualizationConv from './tabs/VisualizationConv';
 import DataDetails from './tabs/DataDetails';
 import EditDatasetDlg from './EditDatasetDlg';
+import { useConfirm } from 'material-ui-confirm';
 
 const DatasetsView = () => {
+    const confirm = useConfirm()
+
     const [datasets, setDatasets] = useState<DataSet[]>([])
     const [currentDatasetId, setCurrentDatasetId] = useState<number>(0);
     const [reloadCurrentDataset, setReloadCurrentDataset] = useState<boolean>(false);
@@ -66,14 +69,18 @@ const DatasetsView = () => {
     }, [])
 
     const overwriteDatafile = (datafile_id: number, dataset_id: number, decision: string) => {
-        overwriteDatafileApi(datafile_id, dataset_id, decision).then(_ => {
+        overwriteDatafileApi(datafile_id, dataset_id, decision).then(resp => {
             uploadSuccess(dataset_id)
+            if (resp.message)
+                toast.success(resp.message)
         })
     }
     
     const createAnotherDataset = (datafile_id: number, create: boolean) => {
         createAnotherDatasetApi(datafile_id, create).then(resp => {
             uploadSuccess(resp.dataset)
+            if (resp.message)
+                toast.success(resp.message)
         })
     }
 
@@ -92,7 +99,7 @@ const DatasetsView = () => {
         }
     }
 
-    const findDatasetById = useCallback((dataset_id: number) => {
+    const findDatasetById = (dataset_id: number) => {
         for (const dataset of datasets) {
             if (dataset.id == dataset_id)
                 return dataset
@@ -101,7 +108,7 @@ const DatasetsView = () => {
             id: 0,
             name: ''
         }
-    }, [datasets])
+    }
 
     useEffect(() => {
         if (filesToUpload.length <= updatedDatasets.length) return
@@ -131,21 +138,13 @@ const DatasetsView = () => {
                 })
                 setQuestionDlgOpen(true)
             } else if (resp.ask == 'other') {
-                setQuestionDlgData({
-                    title: 'Doesn\'t belong to current dataset',
+                confirm({
+                    title: `Doesn't belong to current dataset`,
                     description: resp.message,
-                    buttons: [{
-                        name: 'Skip',
-                        action: () => { createAnotherDataset(resp.datafile_id, false) },
-                        color: 'inherit'
-                    }, {
-                        name: 'Yes',
-                        action: () => { createAnotherDataset(resp.datafile_id, true) },
-                        focus: true,
-                        variant: 'contained',
-                    }]
-                })
-                setQuestionDlgOpen(true)
+                    confirmationText: 'Yes',
+                    cancellationText: 'Skip'
+                }).then(() => { createAnotherDataset(resp.datafile_id, true) })
+                .catch(() => { createAnotherDataset(resp.datafile_id, false) })
             }
         })
     }, [filesToUpload, updatedDatasets])
@@ -158,7 +157,15 @@ const DatasetsView = () => {
     const onUpdateDatasetName = async () => {
         const resp = await updateDatasetNameApi(currentDatasetId, editDatasetName)
         if (resp.success == 'yes') {
-            reloadDatasets()
+            setDatasets((old_datasets: DataSet[]) => {
+                const new_datasets = [...old_datasets]
+                for (const dataset of new_datasets)
+                    if (dataset.id == currentDatasetId) {
+                        dataset.name = editDatasetName
+                        break
+                    }
+                return new_datasets
+            })
             return true;
         } else {
             return false;
@@ -166,27 +173,15 @@ const DatasetsView = () => {
     }
 
     const onDeleteButtonClicked = () => {
-        setQuestionDlgData({
-            title: 'Confirm',
+        confirm({
             description: 'Do you really want to delete this dataset?',
-            buttons: [{
-                name: 'No',
-                action: () => {},
-                color: 'inherit'
-            }, {
-                name: 'Yes',
-                action: () => {
-                    deleteDatasetApi(currentDatasetId).then(_ => {
-                        toast.success('Dataset is deleted successfully.')
-                        reloadDatasets()
-                    })
-                },
-                focus: true,
-                color: 'error',
-                variant: 'contained',
-            }]
+        }).then(() => {
+            deleteDatasetApi(currentDatasetId).then(_ => {
+                toast.success('Dataset is deleted successfully.')
+                // setDatasets(old_datasets => old_datasets.filter(dataset => dataset.id !== currentDatasetId))
+                reloadDatasets()
+            })
         })
-        setQuestionDlgOpen(true)
     }
 
     return (

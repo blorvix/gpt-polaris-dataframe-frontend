@@ -3,8 +3,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormLabel, Input } from '@mui/material';
-import { useState } from 'react';
+import { TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 
 const EditDatasetDlg = (props: { open: boolean, setOpen: any, name: string, setName: any, onEditName: any }) => {
@@ -19,6 +19,10 @@ const EditDatasetDlg = (props: { open: boolean, setOpen: any, name: string, setN
         }
     }
 
+    useEffect(() => {
+        setError('')
+    }, [open])
+
     return (
         <Dialog
             open={props.open}
@@ -30,14 +34,8 @@ const EditDatasetDlg = (props: { open: boolean, setOpen: any, name: string, setN
                 Edit Dataset
             </DialogTitle>
             <DialogContent>
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                    <FormLabel sx={{marginRight: '1em'}}>Name</FormLabel>
-                    <Input autoFocus required sx={{minWidth: '400px'}} value={props.name} onChange={e => props.setName(e.target.value)} />
-                </div>
-                <div style={{color: 'red', fontStyle: 'italic', fontSize: '0.9em', paddingLeft: '4em', paddingTop: '5px'}}>
-                    {error.length != 0 && <>Error:&nbsp;{error}</>}
-                    {!props.name.length && <>Error: Dataset name cannot be empty.</>}
-                </div>
+                <TextField required label="Name" variant="standard" sx={{minWidth: '400px'}} value={props.name} onChange={e => props.setName(e.target.value)}
+                error={!props.name.length || error.length != 0} helperText={!props.name.length ? 'Dataset name cannot be empty.' : error} />
             </DialogContent>
             <DialogActions>
                 <Button variant='text' color='inherit' onClick={() => props.setOpen(false)}>Cancel</Button>

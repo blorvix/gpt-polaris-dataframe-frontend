@@ -142,7 +142,7 @@ export const uploadDatafileApi = (dataset_id: number, file: File, possible: numb
 }
 
 export const overwriteDatafileApi = (datafile_id: number, dataset_id: number, decision: string) => {
-  return post(`/datasets/${dataset_id}/overwrite/${datafile_id}`, { decision })
+  return postJson(`/datasets/${dataset_id}/overwrite/${datafile_id}`, { decision })
 }
 
 export const createAnotherDatasetApi = (datafile_id: number, create: boolean) => {
@@ -179,4 +179,12 @@ export const deleteDatasetApi = (dataset_id: number) => {
 
 export const updateDatasetNameApi = (dataset_id: number, name: string) => {
   return putJson(`/datasets/${dataset_id}`, {name})
+}
+
+export const deleteDatafileApi = (datafile_id: number) => {
+  return _delete(`/datasets/datafiles/${datafile_id}`)
+}
+
+export const updateDatafileNameApi = (datafile_id: number, name: string) => {
+  return putJson(`/datasets/datafiles/${datafile_id}`, {name})
 }
