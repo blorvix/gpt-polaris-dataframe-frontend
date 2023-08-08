@@ -13,6 +13,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ConfirmProvider } from "material-ui-confirm";
 import { ToastContainer } from 'react-toastify'
 import './styles/globals.css'
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,16 @@ const router = createBrowserRouter([
     element: <Dashboard />,
   },
 ]);
+
+const theme = createTheme({
+  typography: {
+    allVariants: {
+      fontFamily: [
+        'Inter', 'system-ui', 'Avenir', 'Helvetica', 'Arial', 'sans-serif'
+      ].join(','),
+    },
+  },
+});
 
 const App = () => {
   const [token, setToken] = useLocalStorage<string>("token", "");
@@ -33,7 +44,9 @@ const App = () => {
     <UserContext.Provider value={{ token, setToken, user, setUser, currentConvId, setCurrentConvId }}>
       <GoogleOAuthProvider clientId={Config.GOOGLE_CLIENT_ID}>
         <ConfirmProvider>
-          <RouterProvider router={router} />
+          <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+          </ThemeProvider>
         </ConfirmProvider>
       </GoogleOAuthProvider>
       <ToastContainer />

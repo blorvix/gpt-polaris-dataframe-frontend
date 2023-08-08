@@ -49,9 +49,9 @@ const MultipleSelectDataset = (props: { datasets: DataSet[], selectedDatasets: n
                 }}
                 MenuProps={MenuProps}
             >
-                <MenuItem value="0">
+                {/* <MenuItem value="0">
                     <em></em>
-                </MenuItem>
+                </MenuItem> */}
                 {props.datasets.map(dataset => (
                     <MenuItem key={dataset.id} value={dataset.id}>
                         <Checkbox checked={props.selectedDatasets.indexOf(dataset.id) > -1} />

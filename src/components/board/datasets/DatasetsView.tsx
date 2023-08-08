@@ -70,6 +70,7 @@ const DatasetsView = () => {
     }
     
     const createAnotherDataset = (datafile_id: number, create: boolean) => {
+        createAnotherDatasetApi(datafile_id, create)
         createAnotherDatasetApi(datafile_id, create).then(resp => {
             uploadSuccess(resp.dataset)
         })
