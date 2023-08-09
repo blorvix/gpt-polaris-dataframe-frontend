@@ -196,6 +196,7 @@ const DatasetsView = () => {
                             type="file"
                             id="datasetFileUpload"
                             className="hidden"
+                            accept='.csv, .xlsx'
                             onChange={onUploadFiles}
                             multiple
                         />
