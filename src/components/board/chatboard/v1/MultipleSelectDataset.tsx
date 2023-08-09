@@ -26,7 +26,7 @@ const MultipleSelectDataset = (props: { datasets: DataSet[], selectedDatasets: n
     };
 
     return (
-        <FormControl style={{ width: '100%' }}>
+        <FormControl style={{ minWidth: '350px' }}>
             <InputLabel id="demo-simple-select-helper-label">Dataset</InputLabel>
             <Select
                 labelId="demo-simple-select-helper-label"

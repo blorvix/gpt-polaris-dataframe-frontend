@@ -3,7 +3,7 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 const SelectDataset = (props: {datasets: DataSet[], currentId: number, setCurrentId: any}) => {
     return (
-        <FormControl sx={{ m: 1, minWidth: 350 }}>
+        <FormControl sx={{ minWidth: 350 }}>
             <InputLabel id="demo-simple-select-helper-label">Dataset</InputLabel>
             <Select
                 labelId="demo-simple-select-helper-label"

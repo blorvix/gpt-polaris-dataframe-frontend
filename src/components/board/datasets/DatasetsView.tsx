@@ -94,6 +94,8 @@ const DatasetsView = () => {
     const uploadSuccess = (dataset_id: number) => {
         if (filesToUpload.length == updatedDatasets.length + 1) {
             reloadDatasets()
+            // @ts-ignore
+            document.getElementById('datasetFileUpload').value = ''
         } else {
             setUpdatedDatasets(old => [...old, dataset_id])
         }
@@ -139,7 +141,7 @@ const DatasetsView = () => {
                 setQuestionDlgOpen(true)
             } else if (resp.ask == 'other') {
                 confirm({
-                    title: `Doesn't belong to current dataset`,
+                    title: `Does not belong to current dataset`,
                     description: resp.message,
                     confirmationText: 'Yes',
                     cancellationText: 'Skip'
@@ -197,15 +199,15 @@ const DatasetsView = () => {
                             onChange={onUploadFiles}
                             multiple
                         />
-                        <Button variant="contained" color="primary" onClick={() => document.getElementById('datasetFileUpload')?.click()}>
+                        <Button variant="contained" color='primary' onClick={() => document.getElementById('datasetFileUpload')?.click()}>
                             Upload a New File
                         </Button>
                         {currentDatasetId != 0 && (
                             <>
-                                <Button variant="contained" color="success" style={{marginLeft: '1em'}} onClick={onEditButtonClicked}>
+                                <Button variant="contained" color="primary" style={{marginLeft: '1em'}} onClick={onEditButtonClicked}>
                                     Edit
                                 </Button>
-                                <Button variant="contained" color="error" style={{marginLeft: '1em'}} onClick={onDeleteButtonClicked}>
+                                <Button variant="contained" color="primary" style={{marginLeft: '1em'}} onClick={onDeleteButtonClicked}>
                                     Delete
                                 </Button>
                             </>
