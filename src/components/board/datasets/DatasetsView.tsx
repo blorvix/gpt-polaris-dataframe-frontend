@@ -216,7 +216,7 @@ const DatasetsView = () => {
                 </div>
                 <div className='dataset-details'>
                     {currentDatasetId != 0 && (
-                         <Box sx={{ width: '100%', typography: 'body1' }}>
+                         <Box sx={{ width: '100%', typography: 'body1', height: '100%' }}>
                          <TabContext value={detailsTabIndex}>
                            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                              <TabList onChange={(_: any, newValue: string) => {setDetailsTabIndex(newValue)}}>
@@ -226,7 +226,7 @@ const DatasetsView = () => {
                                <Tab label="Visualization Help" value="4" />
                              </TabList>
                            </Box>
-                           <TabPanel value="1"><DataDetails dataset_id={currentDatasetId} forceReload={reloadCurrentDataset}/></TabPanel>
+                           <TabPanel value="1" sx={{padding: 0}}><DataDetails dataset_id={currentDatasetId} forceReload={reloadCurrentDataset}/></TabPanel>
                            <TabPanel value="2" sx={{padding: 0}}><InsightsConv dataset_id={currentDatasetId}/></TabPanel>
                            <TabPanel value="3" sx={{padding: 0}}><CleanupConv dataset_id={currentDatasetId}/></TabPanel>
                            <TabPanel value="4" sx={{padding: 0}}><VisualizationConv dataset_id={currentDatasetId}/></TabPanel>

@@ -18,6 +18,7 @@
 }
 .datasets-view .dataset-details {
     /* grid-area: datasets-details; */
+    height: calc(100vh - 81px);
 }
 
 /* .datasets-view > :last-child {
@@ -60,6 +61,6 @@
 }
 
 .dataset-details .MuiTabPanel-root {
-    height: calc(100vh - 153px);
+    height: calc(100vh - 130px);
     overflow: auto;
 }

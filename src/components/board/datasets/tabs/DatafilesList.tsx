@@ -157,7 +157,7 @@ const DatafilesList = (props: { dataset_id: number, forceReload: boolean }) => {
     }
 
     return (
-        <TableContainer component={Paper} sx={{maxHeight: 'calc(100vh - 205px)'}}>
+        <TableContainer component={Paper} sx={{maxHeight: 'calc(100vh - 130px)', maxWidth: 'calc(100vw - 260px)'}}>
             <Table size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
