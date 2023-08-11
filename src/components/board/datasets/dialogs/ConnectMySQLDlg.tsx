@@ -30,8 +30,8 @@ const EmptyConnectionInfo = {
 const InputMySQLConnectionDlg = (props: { open: boolean, setOpen: any, onSuccess: any, connectionInfo: ConnectionInfo, setConnectionInfo: any }) => {
     const {open, setOpen, onSuccess, connectionInfo, setConnectionInfo} = props;
 
-    const [name, setName] = useState<string>('')
-    const [nameError, setNameError] = useState<string>('')
+    // const [name, setName] = useState<string>('')
+    // const [nameError, setNameError] = useState<string>('')
     
     const [connectionError, setConnectionError] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
@@ -50,8 +50,8 @@ const InputMySQLConnectionDlg = (props: { open: boolean, setOpen: any, onSuccess
 
     useEffect(() => {
         if (!open) return
-        setNameError('')
-        setName('')
+        // setNameError('')
+        // setName('')
         setConnectionError('')
         setLoading(false)
     }, [open])

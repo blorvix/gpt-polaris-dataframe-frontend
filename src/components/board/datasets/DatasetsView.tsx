@@ -18,7 +18,7 @@ import VisualizationConv from './tabs/VisualizationConv';
 import DataDetails from './tabs/DataDetails';
 import EditDatasetDlg from './dialogs/EditDatasetDlg';
 import { useConfirm } from 'material-ui-confirm';
-import ConnectMySQLDlg, { ConnectionInfo } from './dialogs/ConnectMySQLDlg';
+import ConnectMySQLDlg from './dialogs/ConnectMySQLDlg';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
@@ -194,10 +194,6 @@ const DatasetsView = () => {
 
     const onConnectMySQLButtonClicked = () => {
         setConnectMySQLDlgOpen(true)
-    }
-
-    const onAddSQLTablesSuccess = () => {
-
     }
 
     return (
