@@ -92,6 +92,7 @@ const SelectSQLTablesDlg = (props: { open: boolean, setOpen: any, tables: SQLTab
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
             maxWidth='xs'
+            className='connect-mysql-dlg'
         >
             <DialogTitle id="alert-dialog-title">
                 Select Tables to Add

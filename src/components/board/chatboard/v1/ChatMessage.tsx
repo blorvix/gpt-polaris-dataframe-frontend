@@ -145,7 +145,7 @@ const ChatMessage: React.FC<MessageProps> = ({ message, isStreaming, isCurrentMe
           {/* {content && (
             checkContent(content) ? */}
             {isHTML && (
-              <Iframe src={'/conversations/graph/' + message.content} ></Iframe>
+              <Iframe src={'/conversations/graph/' + message.content} height='400px' ></Iframe>
             )}
             {!isHTML && isFunction && (
               <CollapsibleSection title="Function call" isStreaming={isStreaming} isCurrentMessage={isCurrentMessage} >

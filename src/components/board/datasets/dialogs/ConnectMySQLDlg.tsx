@@ -63,6 +63,7 @@ const InputMySQLConnectionDlg = (props: { open: boolean, setOpen: any, onSuccess
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
             maxWidth='xs'
+            className='connect-mysql-dlg'
         >
             <DialogTitle id="alert-dialog-title">
                 Connect MySQL
@@ -137,6 +138,7 @@ const ConnectMySQLDlg = (props: { open: boolean, setOpen: any, onSuccess: any })
             if (resp.error) {
                 toast.error('MySQL connection failed')
             } else {
+                toast.success(`${resp.length} datasets are added successfully.`)
                 onSuccess(resp)
                 setOpen(false)
             }
@@ -144,7 +146,7 @@ const ConnectMySQLDlg = (props: { open: boolean, setOpen: any, onSuccess: any })
     }
 
     return (
-        <div className='connect-mysql-dlg'>
+        <div>
             <InputMySQLConnectionDlg open={inputDlgOpen} setOpen={setOpen} onSuccess={onAfterConnect} connectionInfo={connectionInfo} setConnectionInfo={setConnectionInfo} />
             <SelectSQLTablesDlg open={tablesDlgOpen} setOpen={setOpen} tables={sqlTables} onSuccess={onAfterSelectTables} />
         </div>

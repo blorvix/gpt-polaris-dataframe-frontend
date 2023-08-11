@@ -22,6 +22,7 @@ import ConnectMySQLDlg from './dialogs/ConnectMySQLDlg';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import DataPrepReport from './tabs/DataPrepReport';
 
 const DatasetsView = () => {
     const confirm = useConfirm()
@@ -248,15 +249,17 @@ const DatasetsView = () => {
                            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                              <TabList onChange={(_: any, newValue: string) => {setDetailsTabIndex(newValue)}}>
                                <Tab label="Data" value="1" />
-                               <Tab label="Insights" value="2" />
-                               <Tab label="Cleanup" value="3" />
-                               <Tab label="Visualization Help" value="4" />
+                               <Tab label="Report" value="2" />
+                               <Tab label="Insights" value="3" />
+                               <Tab label="Cleanup" value="4" />
+                               <Tab label="Visualization Help" value="5" />
                              </TabList>
                            </Box>
                            <TabPanel value="1" sx={{padding: 0}}><DataDetails dataset_id={currentDatasetId} forceReload={reloadCurrentDataset}/></TabPanel>
-                           <TabPanel value="2" sx={{padding: 0}}><InsightsConv dataset_id={currentDatasetId}/></TabPanel>
-                           <TabPanel value="3" sx={{padding: 0}}><CleanupConv dataset_id={currentDatasetId}/></TabPanel>
-                           <TabPanel value="4" sx={{padding: 0}}><VisualizationConv dataset_id={currentDatasetId}/></TabPanel>
+                           <TabPanel value="2" sx={{padding: 0}}><DataPrepReport dataset_id={currentDatasetId}/></TabPanel>
+                           <TabPanel value="3" sx={{padding: 0}}><InsightsConv dataset_id={currentDatasetId}/></TabPanel>
+                           <TabPanel value="4" sx={{padding: 0}}><CleanupConv dataset_id={currentDatasetId}/></TabPanel>
+                           <TabPanel value="5" sx={{padding: 0}}><VisualizationConv dataset_id={currentDatasetId}/></TabPanel>
                          </TabContext>
                        </Box>
                     )}
@@ -264,7 +267,7 @@ const DatasetsView = () => {
             </div>
 
             {filesToUpload.length > updatedDatasets.length && (
-                <div className='progress-wrapper'>
+                <div className='progress-wrapper absolute'>
                     <CircularProgress />
                 </div>
             )}

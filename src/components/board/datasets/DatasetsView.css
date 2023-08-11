@@ -32,13 +32,16 @@
     border-bottom: 1px solid #a8acb3;
 }
 
-.datasets-view-wrapper .progress-wrapper {
-    position: absolute;
+.progress-wrapper {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.progress-wrapper.absolute {
+    position: absolute;
     top: 0;
     left: 0;
     background-color: rgba(0,0,0,0.3);

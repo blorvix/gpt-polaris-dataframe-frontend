@@ -27,7 +27,7 @@ const post = (url: string, data: any = {}, options: any = {}) => {
     body: (data instanceof FormData) ? data : JSON.stringify(data)
   })
 }
-const postJson = (url: string, data: any = {}, options: any = {}) => post(url, data, options).then(data => data.json())
+export const postJson = (url: string, data: any = {}, options: any = {}) => post(url, data, options).then(data => data.json())
 
 const _delete = (url: string, options: any = {}) =>
   fetch(`${Config.API_URL}/${removeSlash(url)}`, { ...getBaseConfig('delete'), ...options })
