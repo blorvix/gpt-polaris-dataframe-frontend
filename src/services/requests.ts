@@ -188,3 +188,11 @@ export const deleteDatafileApi = (datafile_id: number) => {
 export const updateDatafileNameApi = (datafile_id: number, name: string) => {
   return putJson(`/datasets/datafiles/${datafile_id}`, {name})
 }
+
+export const connectMySQLApi = (connectionInfo: any) => {
+  return postJson(`/datasets/mysql/connect`, {connection: connectionInfo})
+}
+
+export const addMySQLTablesApi = (connection: any, tables: any) => {
+  return postJson(`/datasets/mysql/tables`, {connection, tables})
+}

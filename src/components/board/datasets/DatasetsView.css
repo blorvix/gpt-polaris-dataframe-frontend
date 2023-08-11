@@ -64,3 +64,10 @@
     height: calc(100vh - 130px);
     overflow: auto;
 }
+
+.connect-mysql-dlg .MuiLoadingButton-root > span:first-child {
+    padding-top: 1px;
+}
+.connect-mysql-dlg .MuiLoadingButton-root > span:nth-child(2) {
+    margin-left: 4px;
+}

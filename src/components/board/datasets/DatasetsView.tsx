@@ -16,8 +16,12 @@ import InsightsConv from './tabs/InsightsConv';
 import CleanupConv from './tabs/CleanupConv';
 import VisualizationConv from './tabs/VisualizationConv';
 import DataDetails from './tabs/DataDetails';
-import EditDatasetDlg from './EditDatasetDlg';
+import EditDatasetDlg from './dialogs/EditDatasetDlg';
 import { useConfirm } from 'material-ui-confirm';
+import ConnectMySQLDlg, { ConnectionInfo } from './dialogs/ConnectMySQLDlg';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 
 const DatasetsView = () => {
     const confirm = useConfirm()
@@ -35,6 +39,8 @@ const DatasetsView = () => {
 
     const [editDatasetDlgOpen, setEditDatasetDlgOpen] = useState<boolean>(false)
     const [editDatasetName, setEditDatasetName] = useState<string>('')
+
+    const [connectMySQLDlgOpen, setConnectMySQLDlgOpen] = useState<boolean>(false)
 
     const [filesToUpload, setFilesToUpload] = useState<Array<any>>([]);
     const [updatedDatasets, setUpdatedDatasets] = useState<Array<number>>([])
@@ -186,6 +192,14 @@ const DatasetsView = () => {
         })
     }
 
+    const onConnectMySQLButtonClicked = () => {
+        setConnectMySQLDlgOpen(true)
+    }
+
+    const onAddSQLTablesSuccess = () => {
+
+    }
+
     return (
         <div className='datasets-view-wrapper'>
             <div className='datasets-view'>
@@ -200,9 +214,25 @@ const DatasetsView = () => {
                             onChange={onUploadFiles}
                             multiple
                         />
-                        <Button variant="contained" color='primary' onClick={() => document.getElementById('datasetFileUpload')?.click()}>
+                        <PopupState variant="popover" popupId="demo-popup-menu">
+                            {(popupState) => (
+                                <>
+                                    <Button variant="contained" color='primary' {...bindTrigger(popupState)}>
+                                        + Add new data
+                                    </Button>
+                                    <Menu {...bindMenu(popupState)}>
+                                        <MenuItem onClick={() => {document.getElementById('datasetFileUpload')?.click(); popupState.close()}}>Upload a File</MenuItem>
+                                        <MenuItem onClick={() => {onConnectMySQLButtonClicked(); popupState.close()}}>Connect MySQL</MenuItem>
+                                    </Menu>
+                                </>
+                            )}
+                        </PopupState>
+                        {/* <Button variant="contained" color='primary' onClick={() => document.getElementById('datasetFileUpload')?.click()}>
                             Upload a New File
                         </Button>
+                        <Button variant="contained" color="primary" style={{marginLeft: '1em'}} onClick={onConnectMySQLButtonClicked}>
+                            Connect MySQL
+                        </Button> */}
                         {currentDatasetId != 0 && (
                             <>
                                 <Button variant="contained" color="primary" style={{marginLeft: '1em'}} onClick={onEditButtonClicked}>
@@ -245,6 +275,7 @@ const DatasetsView = () => {
 
             <EditDatasetDlg open={editDatasetDlgOpen} setOpen={setEditDatasetDlgOpen} name={editDatasetName} setName={setEditDatasetName} onEditName={onUpdateDatasetName} />
             <QuestionDialog open={questionDlgOpen} setOpen={setQuestionDlgOpen} data={questionDlgData} />
+            <ConnectMySQLDlg open={connectMySQLDlgOpen} setOpen={setConnectMySQLDlgOpen} onSuccess={reloadDatasets} />
         </div>
     )
 }
