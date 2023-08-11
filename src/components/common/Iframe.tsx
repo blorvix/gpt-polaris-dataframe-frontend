@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getJson, postJson } from '../../services/requests';
+import { getJson } from '../../services/requests';
 import { CircularProgress } from '@mui/material';
 
 const Iframe = (props: {src: string, height: string}) => {

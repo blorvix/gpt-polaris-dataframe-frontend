@@ -47,7 +47,7 @@ const MessageBox = (props: {
         {props.type == "html" &&
           // <div className="cell-output-image" dangerouslySetInnerHTML={{ __html: text }}></div>
           <div className="cell-output-image">
-            <Iframe src={'/conversations/graph/' + text} ></Iframe>
+            <Iframe src={'/conversations/graph/' + text} height="400px" ></Iframe>
           </div>
         }
       </div>
